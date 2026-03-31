@@ -1,5 +1,5 @@
-from main import df #type: ignore
-
+from data_manager import df #type: ignore
+from matplotlib import pyplot as plt
    
 def generate_report():
     lines = []                         
