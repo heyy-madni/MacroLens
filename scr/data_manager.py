@@ -109,6 +109,7 @@ def compare_countries(country1: str, country2: str, year: int):
     print(f"Comparison: {country1} has {'higher' if c1.Economic_Score > c2.Economic_Score else 'lower'} economic score than {country2}")
 
 
+
 condition_map = {
     "Recession Signal": "Severe recession detected due to GDP collapse",
     "Stagflation Risk": "High inflation with weak growth, stagflation risk",
@@ -120,19 +121,20 @@ df["GDP_Growth"] = df.groupby("Country")["GDP"].pct_change().mul(100).round(2)
 df["Unemployment_Change"] = df.groupby("Country")["Unemployment"].diff().round(2)
 df["Condition"] = df.apply(get_condition, axis=1)
 df["Contradiction"] = df.apply(detect_contradiction, axis=1)
-df["GDP_Trend"] = df.groupby("Country")["GDP_Growth"].transform(lambda x: x.rolling(3).mean())
 df["Insight"] = df.apply(generate_insight, axis=1)
 df["Economic_Score"] = df.apply(economic_score, axis=1).round(2)
+df["GDP_Predicted"] = df["GDP"].rolling(3).mean()
 df["Condition_Summary"] = df["Condition"].map(condition_map).fillna("Stable economy with no major risks")
 
 
-# fake data point
 
 
 
-
-
+#print(df[df["Country"] == "India"][["Year", "GDP", "GDP_Predicted"]].tail(10))
 
 
 # for col in df.columns:
-#     print(f"{col}: {df[col].head(5).tolist()}")
+#     print(f"{col}:  {df[col].head().tolist()}\n")
+
+
+# print(df.GDP_Trend.head(10).tolist())
