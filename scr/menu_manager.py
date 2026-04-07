@@ -1,23 +1,127 @@
+from report_genrator import genrate_report,genrate_charts 
+from data_manager import back_testing ,compare_countries
 
 
-sub_menu_generate_report = {
-    "1": "Generate in terminal",
-    "2": "make PDF report ",
-    "3": "Back to main menu"
+
+function_map = {
+    "1": genrate_charts,
+    "2": genrate_report,
+    "3": back_testing,
+    "4":compare_countries,
+    "5": exit
 }
 
 
 
+
+
+
+
+def clear_console():
+    import os
+    os.system('cls' if os.name == 'nt' else 'clear')
+
+
+
 def menu():
-    print("Welcome to the India Economy Health Checker!")
-    print("Please select an option:")
-    print("1. view Economic indicators")
-    print("2. generate report")
-    print("3. Exit")
-    choice = input("Enter your choice (1-3): ")
-    return choice
+    # while True:
+        clear_console()
+        print("Welcome to the India Economy Health Checker!")
+        print("Please select an option:")
+        print("1. Function Menu")
+        print("2. Exit")
+        # print("3. Back Testing")
+        # print("4. Exit")
 
 
+        choice = input("Enter your choice: ")
+        
+        if choice == '1':
+            clear_console()
+            print("function menu")
+            print("1. Generate Charts")
+            print("2. Generate Report")
+            print("3. Back Testing")
+            print("4. Compare Countries") 
+            print("5. Exit")
+            
+            func_choice = input("Enter your choice: ")
+           
+            if func_choice in function_map:
+           
+                if func_choice == '3':
+                    clear_console()
+                    years = input(("Enter 4 years for back testing (comma separated, e.g. 2008,2009,2020,2021): "))
+                    year_list = [int(year.strip()) for year in years.split(",")]
+                    if len(year_list) != 4:
+                        print("Please enter exactly 4 years.")
+                        input("Press Enter to try again...")
+                        clear_console()
+                        return
+                    clear_console()
+                    function_map[func_choice](*year_list)
+                    input("Press Enter to return to the menu...")
+                    clear_console()
+           
+                elif func_choice == '4':
+                    clear_console()
+                    country1 = input("Enter the first country: ")
+                    country2 = input("Enter the second country: ")
+                    year = int(input("Enter the year for comparison: "))
+                    clear_console()
+                    function_map[func_choice](country1, country2, year)
+                    input("Press Enter to return to the menu...")
+                    clear_console()
+           
+                else:
+                    function_map[func_choice]()
+                    input("Press Enter to return to the menu...")
+                    clear_console()
+
+
+
+
+
+
+        # if choice == '1':
+        #     genrate_charts()
+        #     input("Press Enter to return to the menu...")
+        #     clear_console()
+        #     return
+        
+        # elif choice == '2':
+        #     genrate_report()
+        #     input("Press Enter to return to the menu...")
+        #     clear_console()
+
+        #     return
+        
+        # elif choice == '3':
+        #     clear_console()
+        #     years = input(("Enter 4 years for back testing (comma separated, e.g. 2008,2009,2020,2021): "))
+        #     year_list = [int(year.strip()) for year in years.split(",")]
+        #     if len(year_list) != 4:
+        #         print("Please enter exactly 4 years.")
+        #         input("Press Enter to try again...")
+        #         clear_console()
+        #         return
+        #     clear_console()
+        #     back_testing(*year_list)
+        #     input("Press Enter to return to the menu...")
+        #     clear_console()
+        #     return
+
+
+        
+        # elif choice == '4':
+        #     print("Exiting the program. Goodbye!")
+        #     exit()
+       
+        # else:
+        #     print("Invalid choice. Please enter a number between 1 and 4.")
+        #     input("Press Enter to try again...")
+        #     clear_console()
+        #     return
 
 
 
