@@ -4,7 +4,8 @@ import json
 
 
 BASE_DIR = Path(__file__).resolve().parent.parent
-SCR_DIR = BASE_DIR / "src"
+SCR_DIR = BASE_DIR / "src"\
+
 INDIA_DATA_FILE = BASE_DIR / "data-file" / "data file.csv"
 MULTI_COUNTRY_DATA_FILE = BASE_DIR / "data-file" / "multi_country_data.json"
 

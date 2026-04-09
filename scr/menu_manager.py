@@ -1,14 +1,17 @@
-from report_genrator import genrate_report,genrate_charts 
+from report_genrator import genrate_report,over_view_of_economy_chart
 from data_manager import back_testing ,compare_countries
 
 
 
 function_map = {
-    "1": genrate_charts,
+    "1": over_view_of_economy_chart,
     "2": genrate_report,
     "3": back_testing,
     "4":compare_countries,
-    "5": exit
+    #todo
+    "5": lambda: print("Report of specific years function not implemented yet."),
+    "6": exit
+    
 }
 
 
@@ -39,17 +42,41 @@ def menu():
         if choice == '1':
             clear_console()
             print("function menu")
-            print("1. Generate Charts")
+            print("1. over view of economy ")
             print("2. Generate Report")
             print("3. Back Testing")
             print("4. Compare Countries") 
-            print("5. Exit")
+            print("5.report of a specific years")
+            print("6. Exit")
             
             func_choice = input("Enter your choice: ")
            
-            if func_choice in function_map:
-           
-                if func_choice == '3':
+            if func_choice == "1":
+                    clear_console()
+                    country = input("Enter the country for overview (default: India): ")
+                    if country == "india"or country == "India" or not country:
+                        country = "India"
+                    elif country == "usa" or country == "US"or country == "USA" or country == "united states":
+                        country = "United States"
+                    elif country == "china"or country == "China":
+                        country = "China"
+                          
+                    if not country:
+                        print(" entered country not found. Defaulting to India.")
+              
+                    clear_console()
+                    function_map[func_choice](choice=country)
+                    input("Press Enter to return to the menu...")
+                    clear_console()
+
+
+            elif func_choice == "2":
+                    clear_console()
+                    function_map[func_choice]()
+                    input("Press Enter to return to the menu...")
+                    clear_console()
+
+            elif func_choice == '3':
                     clear_console()
                     years = input(("Enter 4 years for back testing (comma separated, e.g. 2008,2009,2020,2021): "))
                     year_list = [int(year.strip()) for year in years.split(",")]
@@ -63,7 +90,7 @@ def menu():
                     input("Press Enter to return to the menu...")
                     clear_console()
            
-                elif func_choice == '4':
+            elif func_choice == '4':
                     clear_console()
                     country1 = input("Enter the first country: ")
                     country2 = input("Enter the second country: ")
@@ -73,7 +100,7 @@ def menu():
                     input("Press Enter to return to the menu...")
                     clear_console()
            
-                else:
+            else:
                     function_map[func_choice]()
                     input("Press Enter to return to the menu...")
                     clear_console()
