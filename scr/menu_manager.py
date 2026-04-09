@@ -1,5 +1,5 @@
-from report_genrator import genrate_report,over_view_of_economy_chart
-from data_manager import back_testing ,compare_countries
+from report_genrator import  genrate_report,over_view_of_economy_chart
+from data_manager import back_testing ,compare_countries,df
 
 
 
@@ -31,7 +31,7 @@ def menu():
         clear_console()
         print("Welcome to the India Economy Health Checker!")
         print("Please select an option:")
-        print("1. Function Menu")
+        print("1. Main Menu")
         print("2. Exit")
         # print("3. Back Testing")
         # print("4. Exit")
@@ -41,7 +41,7 @@ def menu():
         
         if choice == '1':
             clear_console()
-            print("function menu")
+            print("Main Menu")
             print("1. over view of economy ")
             print("2. Generate Report")
             print("3. Back Testing")
@@ -57,7 +57,7 @@ def menu():
                     if country == "india"or country == "India" or not country:
                         country = "India"
                     elif country == "usa" or country == "US"or country == "USA" or country == "united states":
-                        country = "United States"
+                        country = "USA"
                     elif country == "china"or country == "China":
                         country = "China"
                           
@@ -92,11 +92,10 @@ def menu():
            
             elif func_choice == '4':
                     clear_console()
-                    country1 = input("Enter the first country: ")
-                    country2 = input("Enter the second country: ")
+
                     year = int(input("Enter the year for comparison: "))
                     clear_console()
-                    function_map[func_choice](country1, country2, year)
+                    function_map[func_choice](country1 =df["Country"].unique()[0], country2 =df["Country"].unique()[1], country3 =df["Country"].unique()[2], year=year)
                     input("Press Enter to return to the menu...")
                     clear_console()
            

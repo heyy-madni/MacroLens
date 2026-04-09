@@ -73,6 +73,7 @@ def over_view_of_economy_chart(choice="India"):
     ax.set_ylabel('Percentage (%)', color='#aaaaaa', fontsize=12)
 
 
+    # background
     x_ticks = country['Year'][::2].tolist()
     ax.set_xticks(x_ticks)
     ax.tick_params(colors='#aaaaaa')
@@ -119,7 +120,7 @@ def genrate_report():
     print("\n".join(lines))
 
 
-# if __name__ == "__main__":
+if __name__ == "__main__":
     # genrate_report()
-    # genrate_charts()
+    over_view_of_economy_chart("China")
 
