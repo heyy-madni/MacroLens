@@ -112,7 +112,7 @@ def over_view_of_economy_chart(choice="India"):
 
 def genrate_report():
     lines = []                         
-    lines.append("INDIA ECONOMIC REPORT\n")
+    lines.append("ECONOMIC REPORT\n")
     
     for _, row in df.iterrows():#type: ignore
         lines.append(f"• {row['Year']}: {row['Condition_Summary']}")   
@@ -122,5 +122,5 @@ def genrate_report():
 
 if __name__ == "__main__":
     # genrate_report()
-    over_view_of_economy_chart("China")
+    over_view_of_economy_chart("USA")
 

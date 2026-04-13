@@ -34,6 +34,7 @@ df = df.rename(columns={
 
 
 df = df.dropna(subset=["GDP", "Inflation", "Unemployment"])
+df = df.drop(df[df["Year"] == 2024].index)
 df = df.reset_index(drop=True)
 
 
@@ -62,10 +63,11 @@ def generate_insight(row):
     return f"{int(row['Year'])}: {row['Condition']} with {row['Contradiction']}"
 
 def economic_score(row):
+
     score = 0
-    score += row["GDP_Growth"] * 2
-    score -= row["Unemployment_Change"] * 5
-    score -= max(0, row["Inflation"] - 4) * 2
+    score += row["GDP_Growth"] * 3
+    score -= row["Unemployment_Change"] * 4
+    score -= max(0, row["Inflation"] - 4) * 1
     return score
 
 
