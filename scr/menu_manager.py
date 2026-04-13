@@ -9,7 +9,8 @@ function_map = {
     "3": back_testing,
     "4":compare_countries,
     #todo
-    "5": lambda: print("Report of specific years function not implemented yet."),
+    "5": lambda: print("add this madni"),
+    
     "6": exit
     
 }
@@ -33,8 +34,7 @@ def menu():
         print("Please select an option:")
         print("1. Main Menu")
         print("2. Exit")
-        # print("3. Back Testing")
-        # print("4. Exit")
+
 
 
         choice = input("Enter your choice: ")
@@ -46,7 +46,7 @@ def menu():
             print("2. Generate Report")
             print("3. Back Testing")
             print("4. Compare Countries") 
-            print("5.report of a specific years")
+            print("5. check modules")
             print("6. Exit")
             
             func_choice = input("Enter your choice: ")

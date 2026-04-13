@@ -62,6 +62,41 @@ def detect_contradiction(row):
 def generate_insight(row):
     return f"{int(row['Year'])}: {row['Condition']} with {row['Contradiction']}"
 
+def check_get_condition(row):
+    condition = get_condition(row)
+    contradictions = []
+    
+    if condition == "Healthy Growth" and row["Inflation"] > 8:
+        contradictions.append("High inflation despite Healthy Growth label")
+    
+    if condition == "Stable" and row["GDP_Growth"] < 0:
+        contradictions.append("Near-recession GDP despite Stable label")
+    
+    if condition == "Recession Signal" and row["Unemployment_Change"] < 0:
+        contradictions.append("Unemployment falling despite Recession label")
+    
+    if condition == "Stagflation Risk" and row["GDP_Growth"] > 3:
+        contradictions.append("Strong growth despite Stagflation label")
+    
+    if condition == "Inflation Risk" and row["GDP_Growth"] > 3:
+        contradictions.append("Strong growth despite Inflation Risk label")
+
+    if condition == "Inflation Risk" and row["Unemployment_Change"] < 0:
+        contradictions.append("Falling unemployment despite Inflation Risk label")
+    
+    if condition == "Recession Signal" and row["Inflation"] < 2:
+        contradictions.append("Low inflation despite Recession label")
+
+    if condition == "Stable" and row["Inflation"] > 8:
+        contradictions.append("High inflation despite Stable label")
+
+
+    return contradictions if contradictions else None
+
+
+
+
+
 def economic_score(row):
 
     score = 0
@@ -87,11 +122,7 @@ def compare_countries(country1 =df["Country"].unique()[0], country2 =df["Country
     print(f"Comparison: {country1} has {'higher' if c1.Economic_Score > c3.Economic_Score else 'lower'} economic score than {country3}")
 
 
-condition_map = {
-    "Recession Signal": "Severe recession detected due to GDP collapse",
-    "Stagflation Risk": "High inflation with weak growth, stagflation risk",
-    "Healthy Growth":   "Strong growth with improving jobs, healthy economy",
-}
+
 
 
 df["GDP_Growth"]        = df.groupby("Country")["GDP"].pct_change().mul(100).round(2)
@@ -101,5 +132,8 @@ df["Contradiction"]     = df.apply(detect_contradiction, axis=1)
 df["Insight"]           = df.apply(generate_insight, axis=1)
 df["Economic_Score"]    = df.apply(economic_score, axis=1).round(2)
 df["GDP_Predicted"]     = df.groupby("Country")["GDP"].transform(lambda x: x.rolling(3).mean())
-df["Condition_Summary"] = df["Condition"].map(condition_map).fillna("Stable economy with no major risks")
+df["Condition_checker"] = df.apply(check_get_condition, axis=1)
 
+
+# print(df[df["Country"] == "India"][["Year", "GDP_Growth", "Unemployment_Change", "Inflation"]].to_string())
+# print(df[df["Country"] == "India"][["Year",  "Condition_checker"]].to_string())
