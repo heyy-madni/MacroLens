@@ -93,7 +93,13 @@ def check_get_condition(row):
 
     return contradictions if contradictions else None
 
-
+def get_regime(row):
+    if row["Economic_Score"] > 5:
+        return "Expansion"
+    elif row["Economic_Score"] < -10:
+        return "Crisis"
+    else:
+        return "Transition"
 
 
 
@@ -133,7 +139,19 @@ df["Insight"]           = df.apply(generate_insight, axis=1)
 df["Economic_Score"]    = df.apply(economic_score, axis=1).round(2)
 df["GDP_Predicted"]     = df.groupby("Country")["GDP"].transform(lambda x: x.rolling(3).mean())
 df["Condition_checker"] = df.apply(check_get_condition, axis=1)
-
+df["Regime"] = df.apply(get_regime, axis=1)
 
 # print(df[df["Country"] == "India"][["Year", "GDP_Growth", "Unemployment_Change", "Inflation"]].to_string())
-# print(df[df["Country"] == "India"][["Year",  "Condition_checker"]].to_string())
+# print(df[df["Country"] == "India"][["Year",  "Regime"]].to_string())
+# print(df.groupby([df["Country"] == "India"][["Year",  "Regime"]]))
+df["Regime_change"] = df.groupby("Country")["Regime"].transform(
+    lambda x: x != x.shift()
+)
+
+df["Regime_ID"] = df.groupby("Country")["Regime_change"].transform(
+    lambda x: x.cumsum()
+)
+
+
+
+print (df['Regime_ID'])
