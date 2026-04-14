@@ -4,7 +4,7 @@ from matplotlib import pyplot as plt
 clean = df[df['GDP_Growth'].between(-20, 25)]
 
 
-
+def __():
 # def genrate_charts():
 
 
@@ -47,7 +47,7 @@ clean = df[df['GDP_Growth'].between(-20, 25)]
 
 #     plt.tight_layout()
 #     plt.show()
-
+    pass
 
 
 

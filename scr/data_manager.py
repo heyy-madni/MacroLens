@@ -127,7 +127,22 @@ def compare_countries(country1 =df["Country"].unique()[0], country2 =df["Country
     print(f"Comparison: {country1} has {'higher' if c1.Economic_Score > c2.Economic_Score else 'lower'} economic score than {country2}")
     print(f"Comparison: {country1} has {'higher' if c1.Economic_Score > c3.Economic_Score else 'lower'} economic score than {country3}")
 
+def regime_periods(country = None):
 
+     
+    df["Regime_change"] = df.groupby("Country")["Regime"].transform(
+    lambda x: x != x.shift())
+
+    df["Regime_ID"] = df.groupby("Country")["Regime_change"].transform(
+    lambda x: x.cumsum())
+
+    data = df.groupby(["Country", "Regime_ID"]).agg(
+    Regime=("Regime", "first"),
+    Start=("Year", "min"),
+    End=("Year", "max"),
+    Avg_Score=("Economic_Score", "mean")
+).reset_index(drop=True)
+    return data
 
 
 
@@ -139,19 +154,13 @@ df["Insight"]           = df.apply(generate_insight, axis=1)
 df["Economic_Score"]    = df.apply(economic_score, axis=1).round(2)
 df["GDP_Predicted"]     = df.groupby("Country")["GDP"].transform(lambda x: x.rolling(3).mean())
 df["Condition_checker"] = df.apply(check_get_condition, axis=1)
-df["Regime"] = df.apply(get_regime, axis=1)
+df["Regime"]           = df.apply(get_regime, axis=1)
+
+
 
 # print(df[df["Country"] == "India"][["Year", "GDP_Growth", "Unemployment_Change", "Inflation"]].to_string())
 # print(df[df["Country"] == "India"][["Year",  "Regime"]].to_string())
 # print(df.groupby([df["Country"] == "India"][["Year",  "Regime"]]))
-df["Regime_change"] = df.groupby("Country")["Regime"].transform(
-    lambda x: x != x.shift()
-)
 
-df["Regime_ID"] = df.groupby("Country")["Regime_change"].transform(
-    lambda x: x.cumsum()
-)
+# print(regime_periods().to_string())   
 
-
-
-print (df['Regime_ID'])
