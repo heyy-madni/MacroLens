@@ -4,20 +4,12 @@ def clear_console():
 
 
 from report_genrator import  genrate_report,over_view_of_economy_chart
-from data_manager import back_testing ,compare_countries,df,regime_periods
+from data_manager import df
 
-# function_map = {
-#     "1": over_view_of_economy_chart,
-#     "2": genrate_report,
-#     "3": back_testing,
-#     "4":compare_countries,
-#     #todo
-#     "5": lambda: print("add this madni"),
-    
-#     "6": exit
-    
-# }
 
+
+
+####################### menu functions ########################
 def choice_1():
     clear_console()
     country = input("Enter the country for overview (default: India): ")
@@ -79,6 +71,116 @@ def choice_4():
     input("Press Enter to return to the menu...")
     clear_console()
 
+
+####################### data functions ########################
+def get_condition(row):
+    if row["GDP_Growth"] < -2:
+        return "Recession Signal"
+    elif row["Inflation"] > 8 and row["GDP_Growth"] < 2:
+        return "Stagflation Risk"
+    elif row["GDP_Growth"] > 3 and row["Unemployment_Change"] < 0:
+        return "Healthy Growth"
+    elif row["Inflation"] > 8:
+        return "Inflation Risk"
+    else:
+        return "Stable"
+    
+
+
+def generate_insight(row):
+    return f"{int(row['Year'])}: {row['Condition']} with {row['Contradiction']}"
+
+
+def check_get_condition(row):
+    condition = get_condition(row)
+    contradictions = []
+    
+    if condition == "Healthy Growth" and row["Inflation"] > 8:
+        contradictions.append("High inflation despite Healthy Growth label")
+    
+    if condition == "Stable" and row["GDP_Growth"] < 0:
+        contradictions.append("Near-recession GDP despite Stable label")
+    
+    if condition == "Recession Signal" and row["Unemployment_Change"] < 0:
+        contradictions.append("Unemployment falling despite Recession label")
+    
+    if condition == "Stagflation Risk" and row["GDP_Growth"] > 3:
+        contradictions.append("Strong growth despite Stagflation label")
+    
+    if condition == "Inflation Risk" and row["GDP_Growth"] > 3:
+        contradictions.append("Strong growth despite Inflation Risk label")
+
+    if condition == "Inflation Risk" and row["Unemployment_Change"] < 0:
+        contradictions.append("Falling unemployment despite Inflation Risk label")
+    
+    if condition == "Recession Signal" and row["Inflation"] < 2:
+        contradictions.append("Low inflation despite Recession label")
+
+    if condition == "Stable" and row["Inflation"] > 8:
+        contradictions.append("High inflation despite Stable label")
+
+
+    return contradictions if contradictions else None
+
+def detect_contradiction(row):
+    if row["GDP_Growth"] > 3 and row["Unemployment_Change"] > 0:
+        return "Jobless Growth"
+    elif row["GDP_Growth"] < 0 and row["Unemployment_Change"] < 0:
+        return "Data Contradiction / Lag Effect"
+    else:
+        return "No Contradiction"
+
+def get_regime(row):
+    if row["Economic_Score"] > 5:
+        return "Expansion"
+    elif row["Economic_Score"] < -10:
+        return "Crisis"
+    else:
+        return "Transition"
+
+
+
+def economic_score(row):
+
+    score = 0
+    score += row["GDP_Growth"] * 3
+    score -= row["Unemployment_Change"] * 4
+    score -= max(0, row["Inflation"] - 4) * 1
+    return score
+
+
+def back_testing(*years: int):
+    a = df[df["Year"].isin(years)]
+    for row in a.itertuples(index=False, name="Row"):  # type: ignore
+        print(f"{row.Year} {row.Country}: {row.Condition} with {row.Contradiction} and Economic Score of {row.Economic_Score}")
+
+def compare_countries(country1 =df["Country"].unique()[0], country2 =df["Country"].unique()[1], country3 =df["Country"].unique()[2], year: int=2020):
+    c1 = df[(df["Country"] == country1) & (df["Year"] == year)].iloc[0]
+    c2 = df[(df["Country"] == country2) & (df["Year"] == year)].iloc[0]
+    c3 = df[(df["Country"] == country3) & (df["Year"] == year)].iloc[0]
+    print(f"{country1} in {year}: {c1.Condition} with {c1.Contradiction} and Economic Score of {c1.Economic_Score}")
+    print(f"{country2} in {year}: {c2.Condition} with {c2.Contradiction} and Economic Score of {c2.Economic_Score}")
+    print(f"{country3} in {year}: {c3.Condition} with {c3.Contradiction} and Economic Score of {c3.Economic_Score}")
+    print(f"Comparison: {country1} has {'higher' if c1.Economic_Score > c2.Economic_Score else 'lower'} economic score than {country2}")
+    print(f"Comparison: {country1} has {'higher' if c1.Economic_Score > c3.Economic_Score else 'lower'} economic score than {country3}")
+
+
+def regime_periods(country = None):
+
+     
+    df["Regime_change"] = df.groupby("Country")["Regime"].transform(
+    lambda x: x != x.shift())
+
+    df["Regime_ID"] = df.groupby("Country")["Regime_change"].transform(
+    lambda x: x.cumsum())
+
+    data = df.groupby(["Country", "Regime_ID"]).agg(
+    Regime=("Regime", "first"),
+    Start=("Year", "min"),
+    End=("Year", "max"),
+    Avg_Score=("Economic_Score", "mean")
+).reset_index(drop=True)
+    return data
 
 
 

@@ -1,6 +1,6 @@
 from report_genrator import  genrate_report,over_view_of_economy_chart
-from data_manager import back_testing ,compare_countries,df,regime_periods
-from functions import choice_1 ,choice_2,choice_3
+
+from functions import choice_1 ,choice_2,choice_3 ,compare_countries,df
  
 
 
