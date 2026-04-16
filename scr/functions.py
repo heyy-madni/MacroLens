@@ -76,14 +76,14 @@ def choice_3():
     clear_console()
 
 
-def choice_4():
-    from data_manager import df
-    clear_console()
-    year = int(input("Enter the year for comparison: "))
-    clear_console()
-    compare_countries(country1 =df["Country"].unique()[0], country2 =df["Country"].unique()[1], country3 =df["Country"].unique()[2], year=year)
-    input("Press Enter to return to the menu...")
-    clear_console()
+# def choice_4():
+#     from data_manager import df
+#     clear_console()
+#     year = int(input("Enter the year for comparison: "))
+#     clear_console()
+#     compare_countries(country1 =df["Country"].unique()[0], country2 =df["Country"].unique()[1], country3 =df["Country"].unique()[2], year=year)
+#     input("Press Enter to return to the menu...")
+#     clear_console()
 
 
 ####################### data functions ########################
@@ -180,6 +180,7 @@ def compare_countries(country1=None, country2=None, country3=None, year: int = 2
     print(f"{country3} in {year}: {c3.Condition} with {c3.Contradiction} and Economic Score of {c3.Economic_Score}")
     print(f"Comparison: {country1} has {'higher' if c1.Economic_Score > c2.Economic_Score else 'lower'} economic score than {country2}")
     print(f"Comparison: {country1} has {'higher' if c1.Economic_Score > c3.Economic_Score else 'lower'} economic score than {country3}")
+
 
 def regime_periods(country=None):
     from data_manager import df

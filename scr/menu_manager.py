@@ -41,8 +41,9 @@ def menu():
                     country1 = input("Enter the first country (default: India): ")
                     country2 = input("Enter the second country (default: USA): ")
                     country3 = input("Enter the third country (default: China): ")
-                    year = int(input("Enter the year for comparison (default: 2020): "))
-                    
+                    year_input = input("Enter the year for comparison (default: 2020): ")
+                    year = int(year_input) if year_input else 2020
+                    clear_console()
                     if not country1:
                         country1 = "India"
                     if not country2:
@@ -61,7 +62,7 @@ def menu():
                     input("Press Enter to return to the menu...")
                     clear_console()
 
-
+print()
 
 
 
