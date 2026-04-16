@@ -4,7 +4,6 @@ from functions import \
     choice_2,\
     choice_3 ,\
     compare_countries,\
-    df,\
     clear_console
  
 

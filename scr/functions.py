@@ -1,8 +1,8 @@
 
 
 
-from report_genrator import  genrate_report,over_view_of_economy_chart
-from data_manager import df
+
+
 
 
 
@@ -28,14 +28,19 @@ def choice_1():
         print(" entered country not found. Defaulting to India.")
               
     clear_console()
-    over_view_of_economy_chart(choice=country)
+    from report_genrator import  over_view_of_economy_chart
+    from data_manager import df
+    over_view_of_economy_chart(df=df,choice=country)
     input("Press Enter to return to the menu...")
     clear_console()
 
 
+
 def choice_2():
+    from data_manager import df
+    from report_genrator import genrate_report
     clear_console()
-    genrate_report()
+    genrate_report(df)
     input("Press Enter to return to the menu...")
     clear_console()
 
@@ -61,6 +66,8 @@ def choice_3():
             country = "China"
         regime_periods(country)
     elif choice == "3":
+        from data_manager import df
+        print("Condition Checker Results:")
         print(df[["Year", "Country", "Condition", "Condition_checker"]].to_string())
         pass
     else:
@@ -70,6 +77,7 @@ def choice_3():
 
 
 def choice_4():
+    from data_manager import df
     clear_console()
     year = int(input("Enter the year for comparison: "))
     clear_console()
@@ -158,15 +166,12 @@ def economic_score(row):
     score -= max(0, row["Inflation"] - 4) * 1
     return score
 
-
-def back_testing(*years: int):
-    a = df[df["Year"].isin(years)]
-    for row in a.itertuples(index=False, name="Row"):  # type: ignore
-        print(f"{row.Year} {row.Country}: {row.Condition} with {row.Contradiction} and Economic Score of {row.Economic_Score}")
-
-
-
-def compare_countries(country1 =df["Country"].unique()[0], country2 =df["Country"].unique()[1], country3 =df["Country"].unique()[2], year: int=2020):
+def compare_countries(country1=None, country2=None, country3=None, year: int = 2020):
+    from data_manager import df
+    countries = df["Country"].unique()
+    if country1 is None: country1 = countries[0]
+    if country2 is None: country2 = countries[1]
+    if country3 is None: country3 = countries[2]
     c1 = df[(df["Country"] == country1) & (df["Year"] == year)].iloc[0]
     c2 = df[(df["Country"] == country2) & (df["Year"] == year)].iloc[0]
     c3 = df[(df["Country"] == country3) & (df["Year"] == year)].iloc[0]
@@ -176,23 +181,31 @@ def compare_countries(country1 =df["Country"].unique()[0], country2 =df["Country
     print(f"Comparison: {country1} has {'higher' if c1.Economic_Score > c2.Economic_Score else 'lower'} economic score than {country2}")
     print(f"Comparison: {country1} has {'higher' if c1.Economic_Score > c3.Economic_Score else 'lower'} economic score than {country3}")
 
-
-
-def regime_periods(country = None):
-     
-    df["Regime_change"] = df.groupby("Country")["Regime"].transform(
-    lambda x: x != x.shift())
-
-    df["Regime_ID"] = df.groupby("Country")["Regime_change"].transform(
-    lambda x: x.cumsum())
-
+def regime_periods(country=None):
+    from data_manager import df
+    df["Regime_change"] = df.groupby("Country")["Regime"].transform(lambda x: x != x.shift())
+    df["Regime_ID"] = df.groupby("Country")["Regime_change"].transform(lambda x: x.cumsum())
     data = df.groupby(["Country", "Regime_ID"]).agg(
-    Regime=("Regime", "first"),
-    Start=("Year", "min"),
-    End=("Year", "max"),
-    Avg_Score=("Economic_Score", "mean")
-).reset_index(drop=True)
+        Regime=("Regime", "first"),
+        Start=("Year", "min"),
+        End=("Year", "max"),
+        Avg_Score=("Economic_Score", "mean")
+    ).reset_index(drop=True)
     return data
+
+def back_testing(*years: int):
+    from data_manager import df
+    a = df[df["Year"].isin(years)]
+    for row in a.itertuples(index=False, name="Row"):
+        print(f"{row.Year} {row.Country}: {row.Condition} with {row.Contradiction} and Economic Score of {row.Economic_Score}")
+
+
+
+
+
+
+
+
 
 
 

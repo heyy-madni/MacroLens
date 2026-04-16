@@ -1,7 +1,8 @@
-from data_manager import df 
+
 from matplotlib import pyplot as plt
 
-clean = df[df['GDP_Growth'].between(-20, 25)]
+
+
 
 
 def __():
@@ -52,7 +53,9 @@ def __():
 
 
 
-def over_view_of_economy_chart(choice="India"):
+def over_view_of_economy_chart(df, choice="India"):
+    from data_manager import df
+    clean = df[df['GDP_Growth'].between(-20, 25)]
     fig, ax = plt.subplots(figsize=(14, 6))
 
     # background
@@ -110,13 +113,11 @@ def over_view_of_economy_chart(choice="India"):
 
 
 
-def genrate_report():
-    lines = []                         
+def genrate_report(df):
+    lines = []
     lines.append("ECONOMIC REPORT\n")
-    
-    for _, row in df.iterrows():#type: ignore
-        lines.append(f"• {row['Year']}: {row['Condition_Summary']}")   
-    
+    for _, row in df.iterrows():
+        lines.append(f"• {int(row['Year'])} [{row['Country']}]: {row['Condition']} — {row['Contradiction']}")
     print("\n".join(lines))
 
 
