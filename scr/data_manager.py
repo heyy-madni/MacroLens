@@ -60,11 +60,7 @@ df["Condition_checker"] = df.apply(check_get_condition, axis=1)
 df["Regime"]           = df.apply(get_regime, axis=1)
 
 
-#test
 
-# print(df[df["Country"] == "India"][["Year", "GDP_Growth", "Unemployment_Change", "Inflation"]].to_string())
-# print(df[df["Country"] == "India"][["Year",  "Regime"]].to_string())
-# print(df.groupby([df["Country"] == "India"][["Year",  "Regime"]]))
 
-# print(regime_periods().to_string())   
+  
 

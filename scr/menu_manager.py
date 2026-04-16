@@ -24,7 +24,13 @@ def menu():
             print("6. Exit")
             
             func_choice = input("Enter your choice: ")
-           
+            
+            if func_choice == "6":
+                    print("Exiting the program. Goodbye!")
+                    exit()
+            
+
+            
             if func_choice == "1":
                     choice_1()
  
@@ -53,7 +59,12 @@ def menu():
                     if not year:
                         year = 2020
                     
-                    compare_countries(country1=country1, country2=country2, country3=country3, year=year)
+                    data =(compare_countries(country1=country1, country2=country2, country3=country3, year=year))
+                    def _(data):
+                        for line in data:
+                            print (line)
+                
+                    _(data=data)
                     input("Press Enter to return to the menu...")
                     clear_console()
            
@@ -62,7 +73,7 @@ def menu():
                     input("Press Enter to return to the menu...")
                     clear_console()
 
-print()
+
 
 
 

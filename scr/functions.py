@@ -76,14 +76,7 @@ def choice_3():
     clear_console()
 
 
-# def choice_4():
-#     from data_manager import df
-#     clear_console()
-#     year = int(input("Enter the year for comparison: "))
-#     clear_console()
-#     compare_countries(country1 =df["Country"].unique()[0], country2 =df["Country"].unique()[1], country3 =df["Country"].unique()[2], year=year)
-#     input("Press Enter to return to the menu...")
-#     clear_console()
+
 
 
 ####################### data functions ########################
@@ -166,6 +159,8 @@ def economic_score(row):
     score -= max(0, row["Inflation"] - 4) * 1
     return score
 
+
+
 def compare_countries(country1=None, country2=None, country3=None, year: int = 2020):
     from data_manager import df
     countries = df["Country"].unique()
@@ -175,13 +170,27 @@ def compare_countries(country1=None, country2=None, country3=None, year: int = 2
     c1 = df[(df["Country"] == country1) & (df["Year"] == year)].iloc[0]
     c2 = df[(df["Country"] == country2) & (df["Year"] == year)].iloc[0]
     c3 = df[(df["Country"] == country3) & (df["Year"] == year)].iloc[0]
-    print(f"{country1} in {year}: {c1.Condition} with {c1.Contradiction} and Economic Score of {c1.Economic_Score}")
-    print(f"{country2} in {year}: {c2.Condition} with {c2.Contradiction} and Economic Score of {c2.Economic_Score}")
-    print(f"{country3} in {year}: {c3.Condition} with {c3.Contradiction} and Economic Score of {c3.Economic_Score}")
-    print(f"Comparison: {country1} has {'higher' if c1.Economic_Score > c2.Economic_Score else 'lower'} economic score than {country2}")
-    print(f"Comparison: {country1} has {'higher' if c1.Economic_Score > c3.Economic_Score else 'lower'} economic score than {country3}")
 
+    if c1.empty or c2.empty or c3.empty:
+        print("Data for one or more countries not found for the specified year.")
+        return
 
+    insight =[]
+
+    insight.append(f"{country1} in {year}: {c1.Condition} with {c1.Contradiction} and Economic Score of {c1.Economic_Score}\n")
+    insight.append(f"{country2} in {year}: {c2.Condition} with {c2.Contradiction} and Economic Score of {c2.Economic_Score}\n")
+    insight.append(f"{country3} in {year}: {c3.Condition} with {c3.Contradiction} and Economic Score of {c3.Economic_Score}\n")
+
+    insight.append(f"Comparison: {country1} has {'higher' if c1.Economic_Score > c2.Economic_Score else 'lower'} economic score than {country2}\n")
+    insight.append(f"Comparison: {country1} has {'higher' if c1.Economic_Score > c3.Economic_Score else 'lower'} economic score than {country3}\n")
+
+    insight.append(f"Comparison: {country1} has {'higher' if c1.Inflation > c2.Inflation else 'lower'} Inflation than {country2}\n")
+    insight.append(f"Comparison: {country1} has {'higher' if c1.Inflation > c3.Inflation else 'lower'} Inflation than {country3}\n")
+
+    insight.append(f"Comparison: {country1} has {'higher' if c1.Unemployment_Change > c2.Unemployment_Change else 'lower'} Unemployment Change than {country2}\n")
+    insight.append(f"Comparison: {country1} has {'higher' if c1.Unemployment_Change > c3.Unemployment_Change else 'lower'} Unemployment Change than {country3}\n")
+
+    return insight
 def regime_periods(country=None):
     from data_manager import df
     df["Regime_change"] = df.groupby("Country")["Regime"].transform(lambda x: x != x.shift())
@@ -201,8 +210,29 @@ def back_testing(*years: int):
         print(f"{row.Year} {row.Country}: {row.Condition} with {row.Contradiction} and Economic Score of {row.Economic_Score}")
 
 
+# def devloper_mode(df):
+
+#     choice = input("data 1:Year, GDP_Growth, Unemployment_Change, Inflation\n" \
+#                    "data 2: Year, Regime\n" \
+#                    "data 3: Regime Periods\n" \
+#                    'data 4: details\n'
+#                    "Enter your choice: ")
+#     if choice == "1":
+#         print(df[["Year", "GDP_Growth", "Unemployment_Change", "Inflation"]].to_string())
+#     elif choice == "2":
+#         print(df[df["Country"] == "India"][["Year", "GDP_Growth", "Unemployment_Change", "Inflation"]].to_string())
+#     elif choice == "3":
+#         print(df[df["Country"] == "India"][["Year",  "Regime"]].to_string())
+#     elif choice == "4":
+
+#        # print(df.head().style.set_properties(**{'text-align': 'left'}).to_string())
+#         print(df.info())#.to_string())
+#         # print(df.describe().to_string())
 
 
+if __name__ == "__main__":
+    from data_manager import df
+    print(df.info())
 
 
 
