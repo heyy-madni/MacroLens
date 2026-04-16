@@ -1,5 +1,4 @@
-from random import choice
-from menu_manager import start_menu
+from menu_manager import menu
 
 
 
@@ -9,7 +8,7 @@ from menu_manager import start_menu
 if __name__ == "__main__":  
     while True:
         try:
-            start_menu()
+            menu()
         except Exception as e:
             print(f"An error occurred: {e}")
             input("Press Enter to return to the menu...")

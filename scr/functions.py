@@ -1,6 +1,4 @@
-def clear_console():
-    import os
-    os.system('cls' if os.name == 'nt' else 'clear')
+
 
 
 from report_genrator import  genrate_report,over_view_of_economy_chart
@@ -10,6 +8,12 @@ from data_manager import df
 
 
 ####################### menu functions ########################
+
+
+def clear_console():
+    import os
+    os.system('cls' if os.name == 'nt' else 'clear')
+
 def choice_1():
     clear_console()
     country = input("Enter the country for overview (default: India): ")
@@ -34,6 +38,7 @@ def choice_2():
     genrate_report()
     input("Press Enter to return to the menu...")
     clear_console()
+
 
 def choice_3():
     clear_console()
@@ -63,6 +68,7 @@ def choice_3():
     input("Press Enter to return to the menu...")
     clear_console()
 
+
 def choice_4():
     clear_console()
     year = int(input("Enter the year for comparison: "))
@@ -73,6 +79,8 @@ def choice_4():
 
 
 ####################### data functions ########################
+
+
 def get_condition(row):
     if row["GDP_Growth"] < -2:
         return "Recession Signal"
@@ -122,6 +130,7 @@ def check_get_condition(row):
 
     return contradictions if contradictions else None
 
+
 def detect_contradiction(row):
     if row["GDP_Growth"] > 3 and row["Unemployment_Change"] > 0:
         return "Jobless Growth"
@@ -129,6 +138,7 @@ def detect_contradiction(row):
         return "Data Contradiction / Lag Effect"
     else:
         return "No Contradiction"
+
 
 def get_regime(row):
     if row["Economic_Score"] > 5:
@@ -154,6 +164,8 @@ def back_testing(*years: int):
     for row in a.itertuples(index=False, name="Row"):  # type: ignore
         print(f"{row.Year} {row.Country}: {row.Condition} with {row.Contradiction} and Economic Score of {row.Economic_Score}")
 
+
+
 def compare_countries(country1 =df["Country"].unique()[0], country2 =df["Country"].unique()[1], country3 =df["Country"].unique()[2], year: int=2020):
     c1 = df[(df["Country"] == country1) & (df["Year"] == year)].iloc[0]
     c2 = df[(df["Country"] == country2) & (df["Year"] == year)].iloc[0]
@@ -165,8 +177,8 @@ def compare_countries(country1 =df["Country"].unique()[0], country2 =df["Country
     print(f"Comparison: {country1} has {'higher' if c1.Economic_Score > c3.Economic_Score else 'lower'} economic score than {country3}")
 
 
-def regime_periods(country = None):
 
+def regime_periods(country = None):
      
     df["Regime_change"] = df.groupby("Country")["Regime"].transform(
     lambda x: x != x.shift())

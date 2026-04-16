@@ -1,6 +1,11 @@
-from report_genrator import  genrate_report,over_view_of_economy_chart
-
-from functions import choice_1 ,choice_2,choice_3 ,compare_countries,df
+#imports
+from functions import \
+    choice_1 ,\
+    choice_2,\
+    choice_3 ,\
+    compare_countries,\
+    df,\
+    clear_console
  
 
 
@@ -8,17 +13,7 @@ from functions import choice_1 ,choice_2,choice_3 ,compare_countries,df
 
 
 
-
-
-
-
-def clear_console():
-    import os
-    os.system('cls' if os.name == 'nt' else 'clear')
-
-
-
-def start_menu():
+def menu():
 
             clear_console()
             print("Main Menu")
@@ -66,51 +61,6 @@ def start_menu():
                     print("Invalid choice. Please enter a number between 1 and 6.")
                     input("Press Enter to return to the menu...")
                     clear_console()
-
-
-
-
-
-
-        # if choice == '1':
-        #     genrate_charts()
-        #     input("Press Enter to return to the menu...")
-        #     clear_console()
-        #     return
-        
-        # elif choice == '2':
-        #     genrate_report()
-        #     input("Press Enter to return to the menu...")
-        #     clear_console()
-
-        #     return
-        
-        # elif choice == '3':
-        #     clear_console()
-        #     years = input(("Enter 4 years for back testing (comma separated, e.g. 2008,2009,2020,2021): "))
-        #     year_list = [int(year.strip()) for year in years.split(",")]
-        #     if len(year_list) != 4:
-        #         print("Please enter exactly 4 years.")
-        #         input("Press Enter to try again...")
-        #         clear_console()
-        #         return
-        #     clear_console()
-        #     back_testing(*year_list)
-        #     input("Press Enter to return to the menu...")
-        #     clear_console()
-        #     return
-
-
-        
-        # elif choice == '4':
-        #     print("Exiting the program. Goodbye!")
-        #     exit()
-       
-        # else:
-        #     print("Invalid choice. Please enter a number between 1 and 4.")
-        #     input("Press Enter to try again...")
-        #     clear_console()
-        #     return
 
 
 
