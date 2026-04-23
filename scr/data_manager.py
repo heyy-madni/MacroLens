@@ -24,7 +24,7 @@ pd.set_option('display.max_colwidth', None)
 
 
 df=df.rename(columns={
-    "years": "Year",
+    "Years": "Year",
     "gdp growth": "gdp growth",
     "inflation": "Inflation",
     "unemployment": "Unemployment"
@@ -51,7 +51,9 @@ df["Condition_checker"] = df.apply(check_get_condition, axis=1)
 df["Regime"]           = df.apply(get_regime, axis=1)
 
 
-print(df.head())
+if __name__ == '__main__':
+    print(df.info())
+    print(df.columns.tolist())
 
 
 

@@ -15,16 +15,16 @@ def __():
 #     ax.set_facecolor('#1a1a1a')
 
 #     # filter anomalies before plotting
-#     clean = df[df['GDP_Growth'].between(-20, 40)]
-#     country = clean[clean["Country"] == "India"]
+#     clean = df[df['gdp growth'].between(-20, 40)]
+#     country = clean[clean["country"] == "India"]
 #     # clean = df
-#     ax.plot(clean['Year'], country['GDP_Growth'], color="#1fd50f", linewidth=2,
+#     ax.plot(clean['Year'], country['gdp growth'], color="#1fd50f", linewidth=2,
 #             marker='o', markersize=3, label='GDP Growth (%)', zorder=3)
 #     ax.plot(clean['Year'], country['Inflation'], color="#bd2b06", linewidth=2,
 #             marker='o', markersize=3, label='Inflation (%)', zorder=3)
 #     ax.plot(clean['Year'], country['Economic_Score'], color="#06bdbd", linewidth=2,
 #                 marker='o', markersize=3, label='Economic Score', zorder=3   )
-#     # shade recession years
+#     # shade recession Years
 #     recessions = [ (2008, 2009), (2020, 2021)]
 #     for start, end in recessions:
 #         ax.axvspan(start, end, color='#ff5252', alpha=0.12, zorder=1)
@@ -54,8 +54,8 @@ def __():
 
 
 def over_view_of_economy_chart(df, choice="India"):
-    from data_manager import df
-    clean = df[df['GDP_Growth'].between(-20, 25)]
+    from data_pipeline import df
+    clean = df[df['gdp growth'].between(-20, 25)]
     fig, ax = plt.subplots(figsize=(14, 6))
 
     # background
@@ -67,10 +67,10 @@ def over_view_of_economy_chart(df, choice="India"):
     plt.grid(color='#2a2a2a', linewidth=0.6)
     # todo
    
-    country = clean[clean["Country"] == choice]
+    country = clean[clean["country"] == choice]
 
     # labkels and title
-    ax.set_title('Country Economic Indicators', fontsize=16,
+    ax.set_title('country Economic Indicators', fontsize=16,
                  fontweight='bold', color='white', pad=16)
     ax.set_xlabel(f'Year                              country:{choice}', color='#aaaaaa', fontsize=12)
     ax.set_ylabel('Percentage (%)', color='#aaaaaa', fontsize=12)
@@ -92,7 +92,7 @@ def over_view_of_economy_chart(df, choice="India"):
 
 
       # plot lines
-    ax.plot(country['Year'], country['GDP_Growth'], color="#1cd40b", linewidth=2,
+    ax.plot(country['Year'], country['gdp growth'], color="#1cd40b", linewidth=2,
             marker='o', markersize=3, label='GDP Growth (%)', zorder=3)
 
     ax.plot(country['Year'], country['Inflation'], color="#bd2b06", linewidth=2,
@@ -117,7 +117,7 @@ def genrate_report(df):
     lines = []
     lines.append("ECONOMIC REPORT\n")
     for _, row in df.iterrows():
-        lines.append(f"• {int(row['Year'])} [{row['Country']}]: {row['Condition']} — {row['Contradiction']}")
+        lines.append(f"• {int(row['Year'])} [{row['country']}]: {row['Condition']} — {row['Contradiction']}")
     print("\n".join(lines))
 
 

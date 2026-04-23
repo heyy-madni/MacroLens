@@ -28,16 +28,16 @@ def data_loader(file_path):
 
 
         
-    df = df.melt(id_vars=['country'],var_name='years',value_name='value')
-    df['years'] = df['years'].astype(int)
+    df = df.melt(id_vars=['country'],var_name='Years',value_name='value')
+    df['Years'] = df['Years'].astype(int)
 
 
     return df
 
 
 def merge_data(gdp_growth_df,inflation_df,unemployment):
-    df=pd.merge(gdp_growth_df,inflation_df,on=['country', 'years'],how='outer')
-    df=pd.merge(df,unemployment,on=['country', 'years'],how='outer')
+    df=pd.merge(gdp_growth_df,inflation_df,on=['country', 'Years'],how='outer')
+    df=pd.merge(df,unemployment,on=['country', 'Years'],how='outer')
     
     df.rename(columns={'value_x':'gdp growth',
                    'value_y':'inflation',
@@ -60,9 +60,7 @@ unemployment = data_loader(raw_files()["UNEMPLOYMENT"])
 df=merge_data(gdp_growth_df,inflation_df,unemployment)
 
 
-if __name__ == '__main__':
-    print(df.info())
-    print(df.columns.tolist())
+
 
 
 
