@@ -1,45 +1,70 @@
 import pandas as pd
-from data_manager import BASE_DIR
+from pathlib import Path
 
-gdp_growth_raw = BASE_DIR / "data-file" / "gdp growth.csv"
-inflation_raw = BASE_DIR / "data-file" / "inflation.csv"
-unemployment_raw = BASE_DIR / "data-file" / "Unemployment.csv"
+def raw_files():
+    BASE_DIR = Path(__file__).resolve().parent.parent
+    return {
+        "GDP_GROWTH": BASE_DIR / "data-file" / "gdp growth.csv",
+        "INFLATION": BASE_DIR / "data-file" / "inflation.csv",
+        "UNEMPLOYMENT": BASE_DIR / "data-file" / "Unemployment.csv"
+    }
 
 
 
-def data_loader(file_path,skip_years=None,dropna=False):
+def data_loader(file_path):
     
 
     with open(file_path) as f:
         df=pd.read_csv(f,on_bad_lines='skip')
 
     df = df.rename(columns={
-        'ï»¿"Country Name"': 'country',
-        'Indicator Name': f'indicator({df["Indicator Name"].iloc[0]})' })
+        'ï»¿"Country Name"': 'country'})
     
-    df.drop(['Indicator Code','Country Code','2025','1960','Unnamed: 70'],axis=1,inplace=True)
-    
-    if skip_years !=None:
-        df.drop(skip_years,axis=1,inplace=True)
+    df.drop(['Indicator Code',\
+             'Country Code',\
+            'Indicator Name',\
+            '2025','1960',\
+            'Unnamed: 70'],axis=1,inplace=True)
 
-    if dropna ==True:
-        df.dropna(inplace=True)
+
         
-
+    df = df.melt(id_vars=['country'],var_name='years',value_name='value')
+    df['years'] = df['years'].astype(int)
 
 
     return df
 
 
-gdp_growth_df = data_loader(gdp_growth_raw)
-inflation_df =data_loader(inflation_raw)
-unemployment = data_loader(unemployment_raw,'1962',True)
+def merge_data(gdp_growth_df,inflation_df,unemployment):
+    df=pd.merge(gdp_growth_df,inflation_df,on=['country', 'years'],how='outer')
+    df=pd.merge(df,unemployment,on=['country', 'years'],how='outer')
+    
+    df.rename(columns={'value_x':'gdp growth',
+                   'value_y':'inflation',
+                   'value':'unemployment'},inplace=True)
+    return df
+
+
+def country_data(country_name,df):  
+
+    
+    country_df = df[df['country'] == country_name]
+    return country_df
 
 
 
-# print(gdp_growth_df.info(),\
-#       inflation_df.info(),\
-#        unemployment.info())
+gdp_growth_df = data_loader(raw_files()["GDP_GROWTH"])
+inflation_df =data_loader(raw_files()["INFLATION"])
+unemployment = data_loader(raw_files()["UNEMPLOYMENT"])
+
+df_1=merge_data(gdp_growth_df,inflation_df,unemployment)
+
+
+if __name__ == '__main__':
+    print(df_1.info())
+    print(df_1.columns.tolist())
+
+
 
 
 
