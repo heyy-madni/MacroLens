@@ -14,7 +14,7 @@ def clear_console():
     import os
     os.system('cls' if os.name == 'nt' else 'clear')
 
-def choice_1():
+def choice():
     clear_console()
     country = input("Enter the country for overview (default: India): ")
     if country == "india"or country == "India" or not country:
@@ -29,7 +29,7 @@ def choice_1():
               
     clear_console()
     from report_genrator import  over_view_of_economy_chart
-    from data_manager import df
+    from data_pipeline import df
     over_view_of_economy_chart(df=df,choice=country)
     input("Press Enter to return to the menu...")
     clear_console()
@@ -37,7 +37,7 @@ def choice_1():
 
 
 def choice_2():
-    from data_manager import df
+    from data_pipeline import df
     from report_genrator import genrate_report
     clear_console()
     genrate_report(df)
@@ -66,7 +66,7 @@ def choice_3():
             country = "China"
         regime_periods(country)
     elif choice == "3":
-        from data_manager import df
+        from data_pipeline import df
         print("Condition Checker Results:")
         print(df[["Year", "Country", "Condition", "Condition_checker"]].to_string())
         pass
@@ -83,11 +83,11 @@ def choice_3():
 
 
 def get_condition(row):
-    if row["GDP_Growth"] < -2:
+    if row["gdp growth"] < -2:
         return "Recession Signal"
-    elif row["Inflation"] > 8 and row["GDP_Growth"] < 2:
+    elif row["Inflation"] > 8 and row["gdp growth"] < 2:
         return "Stagflation Risk"
-    elif row["GDP_Growth"] > 3 and row["Unemployment_Change"] < 0:
+    elif row["gdp growth"] > 3 and row["Unemployment_Change"] < 0:
         return "Healthy Growth"
     elif row["Inflation"] > 8:
         return "Inflation Risk"
@@ -107,16 +107,16 @@ def check_get_condition(row):
     if condition == "Healthy Growth" and row["Inflation"] > 8:
         contradictions.append("High inflation despite Healthy Growth label")
     
-    if condition == "Stable" and row["GDP_Growth"] < 0:
+    if condition == "Stable" and row["gdp growth"] < 0:
         contradictions.append("Near-recession GDP despite Stable label")
     
     if condition == "Recession Signal" and row["Unemployment_Change"] < 0:
         contradictions.append("Unemployment falling despite Recession label")
     
-    if condition == "Stagflation Risk" and row["GDP_Growth"] > 3:
+    if condition == "Stagflation Risk" and row["gdp growth"] > 3:
         contradictions.append("Strong growth despite Stagflation label")
     
-    if condition == "Inflation Risk" and row["GDP_Growth"] > 3:
+    if condition == "Inflation Risk" and row["gdp growth"] > 3:
         contradictions.append("Strong growth despite Inflation Risk label")
 
     if condition == "Inflation Risk" and row["Unemployment_Change"] < 0:
@@ -133,9 +133,9 @@ def check_get_condition(row):
 
 
 def detect_contradiction(row):
-    if row["GDP_Growth"] > 3 and row["Unemployment_Change"] > 0:
+    if row["gdp growth"] > 3 and row["Unemployment_Change"] > 0:
         return "Jobless Growth"
-    elif row["GDP_Growth"] < 0 and row["Unemployment_Change"] < 0:
+    elif row["gdp growth"] < 0 and row["Unemployment_Change"] < 0:
         return "Data Contradiction / Lag Effect"
     else:
         return "No Contradiction"
@@ -154,7 +154,7 @@ def get_regime(row):
 def economic_score(row):
 
     score = 0
-    score += row["GDP_Growth"] * 3
+    score += row["gdp growth"] * 3
     score -= row["Unemployment_Change"] * 4
     score -= max(0, row["Inflation"] - 4) * 1
     return score
@@ -162,7 +162,7 @@ def economic_score(row):
 
 
 def compare_countries(country1=None, country2=None, country3=None, year: int = 2020):
-    from data_manager import df
+    from data_pipeline import df
     countries = df["Country"].unique()
     if country1 is None: country1 = countries[0]
     if country2 is None: country2 = countries[1]
@@ -192,7 +192,7 @@ def compare_countries(country1=None, country2=None, country3=None, year: int = 2
 
     return insight
 def regime_periods(country=None):
-    from data_manager import df
+    from data_pipeline import df
     df["Regime_change"] = df.groupby("Country")["Regime"].transform(lambda x: x != x.shift())
     df["Regime_ID"] = df.groupby("Country")["Regime_change"].transform(lambda x: x.cumsum())
     data = df.groupby(["Country", "Regime_ID"]).agg(
@@ -204,7 +204,7 @@ def regime_periods(country=None):
     return data
 
 def back_testing(*years: int):
-    from data_manager import df
+    from data_pipeline import df
     a = df[df["Year"].isin(years)]
     for row in a.itertuples(index=False, name="Row"):
         print(f"{row.Year} {row.Country}: {row.Condition} with {row.Contradiction} and Economic Score of {row.Economic_Score}")
@@ -212,15 +212,15 @@ def back_testing(*years: int):
 
 # def devloper_mode(df):
 
-#     choice = input("data 1:Year, GDP_Growth, Unemployment_Change, Inflation\n" \
+#     choice = input("data 1:Year, gdp growth, Unemployment_Change, Inflation\n" \
 #                    "data 2: Year, Regime\n" \
 #                    "data 3: Regime Periods\n" \
 #                    'data 4: details\n'
 #                    "Enter your choice: ")
 #     if choice == "1":
-#         print(df[["Year", "GDP_Growth", "Unemployment_Change", "Inflation"]].to_string())
+#         print(df[["Year", "gdp growth", "Unemployment_Change", "Inflation"]].to_string())
 #     elif choice == "2":
-#         print(df[df["Country"] == "India"][["Year", "GDP_Growth", "Unemployment_Change", "Inflation"]].to_string())
+#         print(df[df["Country"] == "India"][["Year", "gdp growth", "Unemployment_Change", "Inflation"]].to_string())
 #     elif choice == "3":
 #         print(df[df["Country"] == "India"][["Year",  "Regime"]].to_string())
 #     elif choice == "4":
@@ -231,7 +231,7 @@ def back_testing(*years: int):
 
 
 if __name__ == "__main__":
-    from data_manager import df
+    from data_pipeline import df
     print(df.info())
 
 

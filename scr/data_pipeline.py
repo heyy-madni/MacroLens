@@ -57,12 +57,12 @@ gdp_growth_df = data_loader(raw_files()["GDP_GROWTH"])
 inflation_df =data_loader(raw_files()["INFLATION"])
 unemployment = data_loader(raw_files()["UNEMPLOYMENT"])
 
-df_1=merge_data(gdp_growth_df,inflation_df,unemployment)
+df=merge_data(gdp_growth_df,inflation_df,unemployment)
 
 
 if __name__ == '__main__':
-    print(df_1.info())
-    print(df_1.columns.tolist())
+    print(df.info())
+    print(df.columns.tolist())
 
 
 
