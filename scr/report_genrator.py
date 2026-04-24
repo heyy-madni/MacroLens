@@ -77,7 +77,7 @@ def over_view_of_economy_chart(df, choice="India"):
 
 
     # background
-    x_ticks = country['Year'][::2].tolist()
+    x_ticks = country['Years'][::2].tolist()
     ax.set_xticks(x_ticks)
     ax.tick_params(colors='#aaaaaa')
     ax.spines['bottom'].set_color('#333333')
@@ -92,13 +92,13 @@ def over_view_of_economy_chart(df, choice="India"):
 
 
       # plot lines
-    ax.plot(country['Year'], country['gdp growth'], color="#1cd40b", linewidth=2,
+    ax.plot(country['Years'], country['gdp growth'], color="#1cd40b", linewidth=2,
             marker='o', markersize=3, label='GDP Growth (%)', zorder=3)
 
-    ax.plot(country['Year'], country['Inflation'], color="#bd2b06", linewidth=2,
+    ax.plot(country['Years'], country['inflation'], color="#bd2b06", linewidth=2,
             marker='o', markersize=3, label='Inflation (%)', zorder=3)
    
-    ax.plot(country['Year'], country['Unemployment_Change'], color="#06bdbd", linewidth=2,
+    ax.plot(country['Years'], country['unemployment'], color="#06bdbd", linewidth=2,
                 marker='o', markersize=3, label='Unemployment', zorder=3   )
 
 
@@ -113,15 +113,29 @@ def over_view_of_economy_chart(df, choice="India"):
 
 
 
-def genrate_report(df):
-    lines = []
-    lines.append("ECONOMIC REPORT\n")
-    for _, row in df.iterrows():
-        lines.append(f"• {int(row['Year'])} [{row['country']}]: {row['Condition']} — {row['Contradiction']}")
+
+def generate_report(df, country="India"):
+
+
+    filtered = df[df['country'] == country]
+    
+    from functions import get_condition, detect_contradiction
+    filtered["Condition"] = filtered.apply(get_condition, axis=1)
+    filtered["Contradiction"] = filtered.apply(detect_contradiction, axis=1)
+    if filtered.empty:
+        print(f"No data found for: {country}")
+        return
+    
+    lines = [f"ECONOMIC REPORT — {country}\n"]
+    
+    for _, row in filtered.iterrows():
+        lines.append(f"• {int(row['Years'])} [{row['country']}]: {row['Condition']} — {row['Contradiction']}")
+    
     print("\n".join(lines))
 
 
 if __name__ == "__main__":
-    # genrate_report()
+    # from data_pipeline import df
+    # generate_report(df, "India")
     over_view_of_economy_chart("USA")
 

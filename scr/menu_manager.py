@@ -31,7 +31,9 @@ def menu():
     if func_choice == "1":
         choice_1()
     elif func_choice == "2":
-        choice_2()
+        country = input("Enter the country for the report (default: India): ") or "India"
+        choice_2(country=country)
+        
     elif func_choice == "3":
         choice_3()
     elif func_choice == "4":
@@ -47,7 +49,6 @@ def menu():
 
 
 
-handle_compare()
 
 
 
