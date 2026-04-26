@@ -7,13 +7,13 @@ from data_pipeline import df
 def handle_compare():
     clear_console()
     country1 = input("Enter the first country (default: India): ") or "India"
-    country2 = input("Enter the second country (default: USA): ") or "USA"
+    country2 = input("Enter the second country (default: USA): ") or "United States"
     country3 = input("Enter the third country (default: China): ") or "China"
-    Years_input = input("Enter the Years for comparison (default: 2020): ")
-    Years = int(Years_input) if Years_input else 2020
+    Year_input = input("Enter the Year for comparison (default: 2020): ")
+    Year = int(Year_input) if Year_input else 2020
 
     clear_console()
-    for line in compare_countries(country1, country2, country3, Years):
+    for line in compare_countries(country1, country2, country3, Year):
         print(line)
     input("Press Enter to return to the menu...")
 

@@ -29,10 +29,10 @@ def over_view_of_economy_chart(df, choice="India"):
 
 
     # background
-    x_ticks = country['Years'][country['Years'] % 5 == 0].tolist()
+    x_ticks = country['Year'][country['Year'] % 5 == 0].tolist()
     ax.tick_params(axis='x', rotation=45)
 
-    x_ticks.append(country['Years'].iloc[-1])  # Ensure the last year is included
+    x_ticks.append(country['Year'].iloc[-1])  # Ensure the last year is included
     
     ax.set_xticks(x_ticks)
 
@@ -50,13 +50,13 @@ def over_view_of_economy_chart(df, choice="India"):
 
 
       # plot lines
-    ax.plot(country['Years'], country['gdp growth'], color="#1cd40b", linewidth=2,
+    ax.plot(country['Year'], country['gdp growth'], color="#1cd40b", linewidth=2,
             marker='o', markersize=3, label='GDP Growth (%)', zorder=3)
 
-    ax.plot(country['Years'], country['inflation'], color="#bd2b06", linewidth=2,
+    ax.plot(country['Year'], country['inflation'], color="#bd2b06", linewidth=2,
             marker='o', markersize=3, label='Inflation (%)', zorder=3)
    
-    ax.plot(country['Years'], country['unemployment'], color="#06bdbd", linewidth=2,
+    ax.plot(country['Year'], country['unemployment'], color="#06bdbd", linewidth=2,
                 marker='o', markersize=3, label='Unemployment', zorder=3   )
 
 
@@ -87,7 +87,7 @@ def generate_report(df, country="India"):
     lines = [f"ECONOMIC REPORT — {country}\n"]
     
     for _, row in filtered.iterrows():
-        lines.append(f"• {int(row['Years'])} [{row['country']}]: {row['Condition']} — {row['Contradiction']}")
+        lines.append(f"• {int(row['Year'])} [{row['country']}]: {row['Condition']} — {row['Contradiction']}")
     
     print("\n".join(lines))
 

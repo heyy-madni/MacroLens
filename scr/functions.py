@@ -25,7 +25,7 @@ def check_get_condition(row):
     contradictions = []
     
     if condition == "Healthy Growth" and row["Inflation"] > 8:
-        contradictions.append("High inflation despite Healthy Growth label")
+        contradictions.append("High Inflation despite Healthy Growth label")
     
     if condition == "Stable" and row["gdp growth"] < 0:
         contradictions.append("Near-recession GDP despite Stable label")
@@ -40,13 +40,13 @@ def check_get_condition(row):
         contradictions.append("Strong growth despite Inflation Risk label")
 
     if condition == "Inflation Risk" and row["Unemployment"] < 0:
-        contradictions.append("Falling unemployment despite Inflation Risk label")
+        contradictions.append("Falling Unemployment despite Inflation Risk label")
     
     if condition == "Recession Signal" and row["Inflation"] < 2:
-        contradictions.append("Low inflation despite Recession label")
+        contradictions.append("Low Inflation despite Recession label")
 
     if condition == "Stable" and row["Inflation"] > 8:
-        contradictions.append("High inflation despite Stable label")
+        contradictions.append("High Inflation despite Stable label")
 
 
     return contradictions if contradictions else None
@@ -82,37 +82,37 @@ def economic_score(row):
 
 
 
-def compare_countries(df, country1=None, country2=None, country3=None, Years: int = 2020):
+def compare_countries(df, country1=None, country2=None, country3=None, Year: int = 2020):
     
     countries = df["country"].unique()
     if country1 is None: country1 = countries[0]
     if country2 is None: country2 = countries[1]
     if country3 is None: country3 = countries[2]
 
-    c1_df = df[(df["country"] == country1) & (df["Years"] == Years)]
-    c2_df = df[(df["country"] == country2) & (df["Years"] == Years)]
-    c3_df = df[(df["country"] == country3) & (df["Years"] == Years)]
+    c1_df = df[(df["country"] == country1) & (df["Year"] == Year)]
+    c2_df = df[(df["country"] == country2) & (df["Year"] == Year)]
+    c3_df = df[(df["country"] == country3) & (df["Year"] == Year)]
 
     if c1_df.empty or c2_df.empty or c3_df.empty:
-        return [f"Data not found for one or more countries in {Years}."]
+        return [f"Data not found for one or more countries in {Year}."]
 
     c1, c2, c3 = c1_df.iloc[0], c2_df.iloc[0], c3_df.iloc[0]
 
 
     insight =[]
 
-    insight.append(f"{country1} in {Years}: {c1.Condition} with {c1.Contradiction} and Economic Score of {c1.Economic_Score}\n")
-    insight.append(f"{country2} in {Years}: {c2.Condition} with {c2.Contradiction} and Economic Score of {c2.Economic_Score}\n")
-    insight.append(f"{country3} in {Years}: {c3.Condition} with {c3.Contradiction} and Economic Score of {c3.Economic_Score}\n")
+    insight.append(f"{country1} in {Year}: {c1.Condition} with {c1.Contradiction} and Economic Score of {c1.Economic_Score}\n")
+    insight.append(f"{country2} in {Year}: {c2.Condition} with {c2.Contradiction} and Economic Score of {c2.Economic_Score}\n")
+    insight.append(f"{country3} in {Year}: {c3.Condition} with {c3.Contradiction} and Economic Score of {c3.Economic_Score}\n")
 
     insight.append(f"Comparison: {country1} has {'higher' if c1.Economic_Score > c2.Economic_Score else 'lower'} economic score than {country2}\n")
     insight.append(f"Comparison: {country1} has {'higher' if c1.Economic_Score > c3.Economic_Score else 'lower'} economic score than {country3}\n")
 
-    insight.append(f"Comparison: {country1} has {'higher' if c1.inflation > c2.inflation else 'lower'} Inflation than {country2}\n")
-    insight.append(f"Comparison: {country1} has {'higher' if c1.inflation > c3.inflation else 'lower'} Inflation than {country3}\n")
+    insight.append(f"Comparison: {country1} has {'higher' if c1.Inflation > c2.Inflation else 'lower'} Inflation than {country2}\n")
+    insight.append(f"Comparison: {country1} has {'higher' if c1.Inflation > c3.Inflation else 'lower'} Inflation than {country3}\n")
 
-    insight.append(f"Comparison: {country1} has {'higher' if c1.unemployment > c2.unemployment else 'lower'} Unemployment than {country2}\n")
-    insight.append(f"Comparison: {country1} has {'higher' if c1.unemployment > c3.unemployment else 'lower'} Unemployment than {country3}\n")
+    insight.append(f"Comparison: {country1} has {'higher' if c1.Unemployment > c2.Unemployment else 'lower'} Unemployment than {country2}\n")
+    insight.append(f"Comparison: {country1} has {'higher' if c1.Unemployment > c3.Unemployment else 'lower'} Unemployment than {country3}\n")
 
     return insight
 
@@ -128,23 +128,23 @@ def regime_periods(df, country="India"):
     data = df.groupby("Regime_ID").agg(
         Country=("country", "first"),
         Regime=("Regime", "first"),
-        Start=("Years", "min"),
-        End=("Years", "max"),
+        Start=("Year", "min"),
+        End=("Year", "max"),
         Avg_Score=("Economic_Score", "mean")
     ).reset_index(drop=True)
 
     return data
 
 
-def back_testing(df,*Years: int, country='India'):
+def back_testing(df,*Year: int, country='India'):
     
 
-    filtered_df = df[df["Years"].isin(Years)]
+    filtered_df = df[df["Year"].isin(Year)]
     if country:
         filtered_df = filtered_df[filtered_df["country"] == country]
-    a = filtered_df[["Years", "country", "Condition", "Contradiction", "Economic_Score"]]
+    a = filtered_df[["Year", "country", "Condition", "Contradiction", "Economic_Score"]]
     for row in a.itertuples(index=False, name="Row"):
-        print(f"{row.Years  } {row.country}: {row.Condition} with {row.Contradiction} and Economic Score of {row.Economic_Score}")
+        print(f"{row.Year  } {row.country}: {row.Condition} with {row.Contradiction} and Economic Score of {row.Economic_Score}")
 
 
 
@@ -196,14 +196,14 @@ def choice_2(df, country):
 def choice_3(df):
     clear_console()
     print("Back Testing Options:")
-    print("1. Custom Years Back Testing")
+    print("1. Custom Year Back Testing")
     print("2. Regime Periods")
     print("3. Condition Checker")
     choice = input("Enter your choice: ")
     
     if choice == "1":
-        Years = int(input("Enter the Years for back testing: "))
-        back_testing(df, Years)
+        Year = int(input("Enter the Year for back testing: "))
+        back_testing(df, Year)
     
     elif choice == "2":
         country = input("Enter the country for regime periods (default: India): ") or "India"
@@ -227,7 +227,7 @@ def choice_3_3(df, country):
         print("Condition Checker Results:")
 
 
-        result = filtered_df[["Years", "country", "Condition", "Condition_checker"]]
+        result = filtered_df[["Year", "country", "Condition", "Condition_checker"]]
         col_widths = {col: max(result[col].astype(str).fillna("None").map(len).max(), len(col)) for col in result.columns}
 
         header = "  ".join(col.ljust(col_widths[col]) for col in result.columns)
@@ -246,7 +246,7 @@ def choice_3_3(df, country):
 def choice_5(df):
     choice = input("""
  1 list oof countries supported
- 2 list of Years supported
+ 2 list of Year supported
  3 functions used in the project and their purpose
  4 data sources and their description
  5 back to menu
@@ -263,8 +263,8 @@ def choice_5(df):
 
     elif choice == "2":
         
-        print("Years supported:")
-        print(df["Years"].unique())
+        print("Year supported:")
+        print(df["Year"].unique())
 
     elif choice == "3":
         print("Functions used in the project and their purpose:")
@@ -282,7 +282,7 @@ def choice_5(df):
         print("Data sources and their description:")
         print("Data source is from World Bank")
         print("1. GDP Growth: Annual percentage growth rate of GDP at market prices based on constant local currency.")
-        print("2. Inflation: Annual percentage change in the cost to the average consumer of acquiring a basket of goods and services that may be fixed or changed at specified intervals, such as Yearsly.")
+        print("2. Inflation: Annual percentage change in the cost to the average consumer of acquiring a basket of goods and services that may be fixed or changed at specified intervals, such as Yearly.")
         print("3. Unemployment: Percentage of the total labor force that is unemployed but actively seeking employment and willing to work.")
     else:
         print("Invalid choice. Returning to menu.")
