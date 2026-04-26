@@ -1,5 +1,5 @@
 ####################### data functions ########################
-
+# 
 
 
 def get_condition(row):
@@ -82,8 +82,8 @@ def economic_score(row):
 
 
 
-def compare_countries(country1=None, country2=None, country3=None, Years: int = 2020):
-    from data_pipeline import df
+def compare_countries(df, country1=None, country2=None, country3=None, Years: int = 2020):
+    
     countries = df["country"].unique()
     if country1 is None: country1 = countries[0]
     if country2 is None: country2 = countries[1]
@@ -120,8 +120,7 @@ def compare_countries(country1=None, country2=None, country3=None, Years: int = 
 def regime_periods(df, country="India"):
     df = df[df["country"] == country].copy()
 
-    df["Economic_Score"] = df.apply(economic_score, axis=1).round(2)
-    df["Regime"] = df.apply(get_regime, axis=1)
+
     df["Regime_change"] = df["Regime"] != df["Regime"].shift()
     df["Regime_ID"] = df["Regime_change"].cumsum()
     
@@ -137,12 +136,9 @@ def regime_periods(df, country="India"):
     return data
 
 
-def back_testing(*Years: int, country='India'):
-    from data_pipeline import df
-    from functions import get_condition, detect_contradiction, economic_score
-    df["Condition"] = df.apply(get_condition, axis=1)
-    df["Contradiction"] = df.apply(detect_contradiction, axis=1)
-    df["Economic_Score"] = df.apply(economic_score, axis=1).round(2)
+def back_testing(df,*Years: int, country='India'):
+    
+
     filtered_df = df[df["Years"].isin(Years)]
     if country:
         filtered_df = filtered_df[filtered_df["country"] == country]
@@ -161,7 +157,7 @@ def clear_console():
     os.system('cls' if os.name == 'nt' else 'clear')
 
 
-def choice_1():
+def choice_1(df):
     clear_console()
     country = input("Enter the country for overview (default: India): ")
     if country == "india"or country == "India" or not country:
@@ -177,7 +173,7 @@ def choice_1():
     clear_console()
 
     from report_genrator import  over_view_of_economy_chart
-    from data_pipeline import df
+    
 
     over_view_of_economy_chart(df=df,choice=country)
     input("Press Enter to return to the menu...")
@@ -185,19 +181,19 @@ def choice_1():
 
 
 
-def choice_2(country):
-    from data_pipeline import df
+def choice_2(df, country):
+    
     from report_genrator import generate_report
     clear_console()
     generate_report(df, country=country)
     input("Press Enter to return to the menu...")
     clear_console()
 
-    # from data_pipeline import df 
+    #  
     # print(df.columns)
     # choice_2()
 
-def choice_3():
+def choice_3(df):
     clear_console()
     print("Back Testing Options:")
     print("1. Custom Years Back Testing")
@@ -207,7 +203,7 @@ def choice_3():
     
     if choice == "1":
         Years = int(input("Enter the Years for back testing: "))
-        back_testing(Years)
+        back_testing(df, Years)
     
     elif choice == "2":
         country = input("Enter the country for regime periods (default: India): ") or "India"
@@ -217,22 +213,19 @@ def choice_3():
             country = "USA"
         elif country == "china"or country == "China":
             country = "China"
-        print(regime_periods(country))
+        print(regime_periods(df, country))
     
     elif choice == "3":
-        choice_3_3(input("Enter the country for condition checker (default: India): ") or "India")
+        choice_3_3(df, input("Enter the country for condition checker (default: India): ") or "India")
 
 
-def choice_3_3(country):
+def choice_3_3(df, country):
         
         clear_console()
-        from data_pipeline import df
+        
         filtered_df = df[df["country"] == country]
         print("Condition Checker Results:")
 
-        from functions import get_condition, check_get_condition
-        filtered_df["Condition"] = filtered_df.apply(get_condition, axis=1)
-        filtered_df["Condition_checker"] = filtered_df.apply(check_get_condition, axis=1)
 
         result = filtered_df[["Years", "country", "Condition", "Condition_checker"]]
         col_widths = {col: max(result[col].astype(str).fillna("None").map(len).max(), len(col)) for col in result.columns}
@@ -250,7 +243,7 @@ def choice_3_3(country):
 
 
 
-def choice_5():
+def choice_5(df):
     choice = input("""
  1 list oof countries supported
  2 list of Years supported
@@ -264,12 +257,12 @@ def choice_5():
     
 
     if choice == "1":
-        from data_pipeline import df
+        
         print("Countries supported:")
         print(df["country"].unique())
 
     elif choice == "2":
-        from data_pipeline import df
+        
         print("Years supported:")
         print(df["Years"].unique())
 
@@ -297,8 +290,6 @@ def choice_5():
 
 
 
-
-# choice_3_3("India")
 
 
 

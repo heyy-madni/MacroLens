@@ -2,6 +2,7 @@ from functions import (
     choice_1, choice_2, choice_3, choice_5,
     compare_countries, clear_console
 )
+from data_pipeline import df
 
 def handle_compare():
     clear_console()
@@ -29,17 +30,17 @@ def menu():
     func_choice = input("Enter your choice: ")
 
     if func_choice == "1":
-        choice_1()
+        choice_1(df)
     elif func_choice == "2":
         country = input("Enter the country for the report (default: India): ") or "India"
-        choice_2(country=country)
+        choice_2(df, country=country)
         
     elif func_choice == "3":
-        choice_3()
+        choice_3(df)
     elif func_choice == "4":
         handle_compare()
     elif func_choice == "5":
-        choice_5()
+        choice_5(df)
     elif func_choice == "6":
         print("Exiting the program. Goodbye!")
         exit()
