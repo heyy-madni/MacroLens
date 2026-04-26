@@ -1,8 +1,19 @@
 import pandas as pd
 from pathlib import Path
+import functions
+#dicetry
+BASE_DIR = Path(__file__).resolve().parent.parent
+SCR_DIR = BASE_DIR / "src"
+
+
+pd.set_option('display.max_rows', None)
+pd.set_option('display.max_columns', None)
+pd.set_option('display.width', None)
+pd.set_option('display.max_colwidth', None)
+
 
 def raw_files():
-    BASE_DIR = Path(__file__).resolve().parent.parent
+    
     return {
         "GDP_GROWTH": BASE_DIR / "data-file" / "gdp growth.csv",
         "INFLATION": BASE_DIR / "data-file" / "inflation.csv",
@@ -59,10 +70,26 @@ unemployment = data_loader(raw_files()["UNEMPLOYMENT"])
 
 df=merge_data(gdp_growth_df,inflation_df,unemployment)
 
+df=df.rename(columns={
+    "Years": "Year",
+    "gdp growth": "gdp growth",
+    "inflation": "Inflation",
+    "unemployment": "Unemployment"
+})
+
+df = df.dropna(subset=["gdp growth", "Inflation", "Unemployment"])
+df = df.reset_index(drop=True)
 
 
+df["Unemployment_Change"] = df.groupby("country")["Unemployment"].diff().round(2)
+df["Condition"]         = df.apply(functions.get_condition, axis=1)
+df["Contradiction"]     = df.apply(functions.detect_contradiction, axis=1)
+df["Insight"]           = df.apply(functions.generate_insight, axis=1)
+df["Economic_Score"]    = df.apply(functions.economic_score, axis=1).round(2)
+df["GDP_Predicted"]     = df.groupby("country")["gdp growth"].transform(lambda x: x.rolling(3).mean())
+df["Condition_checker"] = df.apply(functions.check_get_condition, axis=1)
+df["Regime"]           = df.apply(functions.get_regime, axis=1)
 
-
-
-
-
+if __name__ == '__main__':
+    print(df.info())
+    print(df.head(2))

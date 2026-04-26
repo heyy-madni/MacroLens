@@ -1,17 +1,15 @@
 ####################### data functions ########################
 
 
-from unittest import result
-
 
 def get_condition(row):
     if row["gdp growth"] < -2:
         return "Recession Signal"
-    elif row["inflation"] > 8 and row["gdp growth"] < 2:
+    elif row["Inflation"] > 8 and row["gdp growth"] < 2:
         return "Stagflation Risk"
-    elif row["gdp growth"] > 3 and row["unemployment"] < 0:
+    elif row["gdp growth"] > 3 and row["Unemployment"] < 0:
         return "Healthy Growth"
-    elif row["inflation"] > 8:
+    elif row["Inflation"] > 8:
         return "Inflation Risk"
     else:
         return "Stable"
@@ -19,20 +17,20 @@ def get_condition(row):
 
 
 def generate_insight(row):
-    return f"{int(row['Years'])}: {row['Condition']} with {row['Contradiction']}"
+    return f"{int(row['Year'])}: {row['Condition']} with {row['Contradiction']}"
 
 
 def check_get_condition(row):
     condition = get_condition(row)
     contradictions = []
     
-    if condition == "Healthy Growth" and row["inflation"] > 8:
+    if condition == "Healthy Growth" and row["Inflation"] > 8:
         contradictions.append("High inflation despite Healthy Growth label")
     
     if condition == "Stable" and row["gdp growth"] < 0:
         contradictions.append("Near-recession GDP despite Stable label")
     
-    if condition == "Recession Signal" and row["unemployment"] < 0:
+    if condition == "Recession Signal" and row["Unemployment"] < 0:
         contradictions.append("Unemployment falling despite Recession label")
     
     if condition == "Stagflation Risk" and row["gdp growth"] > 3:
@@ -41,13 +39,13 @@ def check_get_condition(row):
     if condition == "Inflation Risk" and row["gdp growth"] > 3:
         contradictions.append("Strong growth despite Inflation Risk label")
 
-    if condition == "Inflation Risk" and row["unemployment"] < 0:
+    if condition == "Inflation Risk" and row["Unemployment"] < 0:
         contradictions.append("Falling unemployment despite Inflation Risk label")
     
-    if condition == "Recession Signal" and row["inflation"] < 2:
+    if condition == "Recession Signal" and row["Inflation"] < 2:
         contradictions.append("Low inflation despite Recession label")
 
-    if condition == "Stable" and row["inflation"] > 8:
+    if condition == "Stable" and row["Inflation"] > 8:
         contradictions.append("High inflation despite Stable label")
 
 
@@ -55,9 +53,9 @@ def check_get_condition(row):
 
 
 def detect_contradiction(row):
-    if row["gdp growth"] > 3 and row["unemployment"] > 0:
+    if row["gdp growth"] > 3 and row["Unemployment"] > 0:
         return "Jobless Growth"
-    elif row["gdp growth"] < 0 and row["unemployment"] < 0:
+    elif row["gdp growth"] < 0 and row["Unemployment"] < 0:
         return "Data Contradiction / Lag Effect"
     else:
         return "No Contradiction"
@@ -77,8 +75,8 @@ def economic_score(row):
 
     score = 0
     score += row["gdp growth"] * 3
-    score -= row["unemployment"] * 4
-    score -= max(0, row["inflation"] - 4) * 1
+    score -= row["Unemployment"] * 4
+    score -= max(0, row["Inflation"] - 4) * 1
     return score
 
 
@@ -169,7 +167,7 @@ def choice_1():
     if country == "india"or country == "India" or not country:
         country = "India"
     elif country == "usa" or country == "US"or country == "USA" or country == "united states":
-        country = "USA"
+        country = "United States"
     elif country == "china"or country == "China":
         country = "China"
           
