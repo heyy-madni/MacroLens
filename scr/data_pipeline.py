@@ -1,6 +1,11 @@
+#data_pipeline.py
+
+
+#imports
 import pandas as pd
 from pathlib import Path
-import functions
+import functions as f
+
 #dicetry
 BASE_DIR = Path(__file__).resolve().parent.parent
 SCR_DIR = BASE_DIR / "src"
@@ -82,13 +87,13 @@ df = df.reset_index(drop=True)
 
 
 df["Unemployment_Change"] = df.groupby("country")["Unemployment"].diff().round(2)
-df["Condition"]         = df.apply(functions.get_condition, axis=1)
-df["Contradiction"]     = df.apply(functions.detect_contradiction, axis=1)
-df["Insight"]           = df.apply(functions.generate_insight, axis=1)
-df["Economic_Score"]    = df.apply(functions.economic_score, axis=1).round(2)
+df["Condition"]         = df.apply(f.get_condition, axis=1)
+df["Contradiction"]     = df.apply(f.detect_contradiction, axis=1)
+df["Insight"]           = df.apply(f.generate_insight, axis=1)
+df["Economic_Score"]    = df.apply(f.economic_score, axis=1).round(2)
 df["GDP_Predicted"]     = df.groupby("country")["gdp growth"].transform(lambda x: x.rolling(3).mean())
-df["Condition_checker"] = df.apply(functions.check_get_condition, axis=1)
-df["Regime"]           = df.apply(functions.get_regime, axis=1)
+df["Condition_checker"] = df.apply(f.check_get_condition, axis=1)
+df["Regime"]           = df.apply(f.get_regime, axis=1)
 
 if __name__ == '__main__':
     print(df.info())
