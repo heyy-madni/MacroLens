@@ -22,8 +22,10 @@ def raw_files():
     return {
         "GDP_GROWTH": BASE_DIR / "data-file" / "gdp growth.csv",
         "INFLATION": BASE_DIR / "data-file" / "inflation.csv",
-        "UNEMPLOYMENT": BASE_DIR / "data-file" / "Unemployment.csv"
+        "UNEMPLOYMENT": BASE_DIR / "data-file" / "Unemployment.csv",
+        "INCOME_PER_CAPITA": BASE_DIR / "data-file" / "income per capita.csv"
     }
+
 
 
 
@@ -51,13 +53,15 @@ def data_loader(file_path):
     return df
 
 
-def merge_data(gdp_growth_df,inflation_df,unemployment):
+def merge_data(gdp_growth_df,inflation_df,unemployment,income_per_capita_df=None):
     df=pd.merge(gdp_growth_df,inflation_df,on=['country', 'Years'],how='outer')
     df=pd.merge(df,unemployment,on=['country', 'Years'],how='outer')
-    
+    df=pd.merge(df,income_per_capita_df,on=['country', 'Years'],how='outer') if income_per_capita_df is not None else df
     df.rename(columns={'value_x':'gdp growth',
                    'value_y':'inflation',
-                   'value':'unemployment'},inplace=True)
+                   'value':'unemployment'
+                   },inplace=True)
+    
     return df
 
 
@@ -72,17 +76,24 @@ def country_data(country_name,df):
 gdp_growth_df = data_loader(raw_files()["GDP_GROWTH"])
 inflation_df =data_loader(raw_files()["INFLATION"])
 unemployment = data_loader(raw_files()["UNEMPLOYMENT"])
+income_per_capita_df = data_loader(raw_files()["INCOME_PER_CAPITA"])
 
-df=merge_data(gdp_growth_df,inflation_df,unemployment)
+
+
+df = merge_data(gdp_growth_df,inflation_df,unemployment)
+df = pd.merge(df, income_per_capita_df, on=['country', 'Years'], how='outer')
+
+
 
 df=df.rename(columns={
     "Years": "Year",
     "gdp growth": "gdp growth",
     "inflation": "Inflation",
-    "unemployment": "Unemployment"
+    "unemployment": "Unemployment",
+    "value": "Income_Per_Capita"
 })
 
-df = df.dropna(subset=["gdp growth", "Inflation", "Unemployment"])
+df = df.dropna(subset=["gdp growth", "Inflation", "Unemployment", "Income_Per_Capita"])
 df = df.reset_index(drop=True)
 
 
