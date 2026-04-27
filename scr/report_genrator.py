@@ -6,7 +6,6 @@ from matplotlib import pyplot as plt
 
 
 def over_view_of_economy_chart(df, choice="India"):
-    from data_pipeline import df
     clean = df[df['gdp growth'].between(-20, 25)]
     fig, ax = plt.subplots(figsize=(14, 6))
 
