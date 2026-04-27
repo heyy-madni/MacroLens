@@ -27,7 +27,7 @@ def get_condition(row):
         return "Recession Signal"
     elif row["Inflation"] > 8 and row["gdp growth"] < 2:
         return "Stagflation Risk"
-    elif row["gdp growth"] > 3 and row["Unemployment"] < 0:
+    elif row["gdp growth"] > 3 and row["Unemployment"] < 5:
         return "Healthy Growth"
     elif row["Inflation"] > 8:
         return "Inflation Risk"
