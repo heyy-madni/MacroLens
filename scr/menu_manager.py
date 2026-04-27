@@ -1,53 +1,38 @@
-from functions import (
-    choice_1, choice_2, choice_3, choice_5,
-    compare_countries, clear_console
-)
-from data_pipeline import df
+# menu_manager.py
 
-def handle_compare():
-    clear_console()
-    country1 = input("Enter the first country (default: India): ") or "India"
-    country2 = input("Enter the second country (default: USA): ") or "United States"
-    country3 = input("Enter the third country (default: China): ") or "China"
-    Year_input = input("Enter the Year for comparison (default: 2020): ")
-    Year = int(Year_input) if Year_input else 2020
 
-    clear_console()
-    for line in compare_countries(country1, country2, country3, Year):
-        print(line)
-    input("Press Enter to return to the menu...")
+import functions as f
 
-def menu():
-    clear_console()
-    print("Main Menu")
-    print("1. Overview of Economy")
-    print("2. Generate Report")
-    print("3. Back Testing")
-    print("4. Compare Countries")
-    print("5. Check Modules")
-    print("6. Exit")
+def main(df):
+    while True:
+        f.clear_console()
+        print("Main Menu")
+        print("1. Overview of Economy")
+        print("2. Generate Report")
+        print("3. Back Testing")
+        print("4. Compare Countries")
+        print("5. Check Modules")
+        print("6. Exit")
 
-    func_choice = input("Enter your choice: ")
+        func_choice = input("Enter your choice: ")
 
-    if func_choice == "1":
-        choice_1(df)
-    elif func_choice == "2":
-        country = input("Enter the country for the report (default: India): ") or "India"
-        choice_2(df, country=country)
-        
-    elif func_choice == "3":
-        choice_3(df)
-    elif func_choice == "4":
-        handle_compare()
-    elif func_choice == "5":
-        choice_5(df)
-    elif func_choice == "6":
-        print("Exiting the program. Goodbye!")
-        exit()
-    else:
-        print("Invalid choice. Please enter a number between 1 and 6.")
-        input("Press Enter to return to the menu...")
-
+        if func_choice == "1":
+            f.choice_1(df)
+        elif func_choice == "2":
+            country = input("Enter the country for the report (default: India): ") or "India"
+            f.choice_2(df, country=country)
+        elif func_choice == "3":
+            f.choice_3(df)
+        elif func_choice == "4":
+            f.choice_4(df)
+        elif func_choice == "5":
+            f.choice_5(df)
+        elif func_choice == "6":
+            print("Exiting the program. Goodbye!")
+            break
+        else:
+            print("Invalid choice. Please enter a number between 1 and 6.")
+            input("Press Enter to return to the menu...")
 
 
 
