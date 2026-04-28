@@ -128,6 +128,20 @@ def back_testing(df, year: int, country="India"):
     for row in filtered_df[["Year", "country", "Condition", "Contradiction", "Economic_Score"]].itertuples(index=False):
         print(f"{row.Year} {row.country}: {row.Condition} with {row.Contradiction} and Economic Score of {row.Economic_Score}")
 
+def rank_economies(df, year=2005):
+    yearly = df[df["Year"] == year][["country", "Economic_Score"]].dropna()
+    ranked = yearly.sort_values("Economic_Score", ascending=False).reset_index(drop=True)
+    ranked.index += 1  
+
+    top10 = ranked.head(10)
+    bottom10 = ranked.tail(10).sort_values("Economic_Score")
+
+    print(f"\n🏆 Top 10 Economies in {year}")
+    print(top10.to_string())
+
+    print(f"\n⚠️  Bottom 10 Economies in {year}")
+    print(bottom10.to_string())
+
 
 ####################### menu functions ########################
     # fw3cf
@@ -161,12 +175,15 @@ def choice_3(df):
     if choice == "1":
         year = int(input("Enter the Year for back testing: "))
         back_testing(df, year)
+        input("Press Enter to return to the menu...")
     elif choice == "2":
         country = normalize_country(input("Enter the country (default: India): ") or "India")
         print(regime_periods(df, country))
+        input("Press Enter to return to the menu...")
     elif choice == "3":
         country = normalize_country(input("Enter the country (default: India): ") or "India")
         choice_3_3(df, country)
+        input("Press Enter to return to the menu...")
 
 def choice_3_3(df, country):
     clear_console()

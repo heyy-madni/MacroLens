@@ -9,7 +9,7 @@ import functions as f
 #dicetry
 BASE_DIR = Path(__file__).resolve().parent.parent
 SCR_DIR = BASE_DIR / "src"
-
+SAVE_REPORT_DIR = BASE_DIR / "reports"
 
 pd.set_option('display.max_rows', None)
 pd.set_option('display.max_columns', None)
@@ -73,6 +73,7 @@ def country_data(country_name,df):
 
 
 
+
 gdp_growth_df = data_loader(raw_files()["GDP_GROWTH"])
 inflation_df =data_loader(raw_files()["INFLATION"])
 unemployment = data_loader(raw_files()["UNEMPLOYMENT"])
@@ -106,6 +107,10 @@ df["GDP_Predicted"]     = df.groupby("country")["gdp growth"].transform(lambda x
 df["Condition_checker"] = df.apply(f.check_get_condition, axis=1)
 df["Regime"]           = df.apply(f.get_regime, axis=1)
 
+
+
+
+
 if __name__ == '__main__':
     print(df.info())
-    print(df.head(2))
+    # print(df.head(2))
