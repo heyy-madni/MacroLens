@@ -47,7 +47,6 @@ def data_loader(file_path):
 
         
     df = df.melt(id_vars=['country'],var_name='Years',value_name='value')
-    df['Years'] = df['Years'].astype(int)
 
 
     return df
@@ -62,6 +61,8 @@ def merge_data(gdp_growth_df,inflation_df,unemployment,income_per_capita_df=None
                    'value':'unemployment'
                    },inplace=True)
     
+
+
     return df
 
 
@@ -83,7 +84,8 @@ income_per_capita_df = data_loader(raw_files()["INCOME_PER_CAPITA"])
 
 df = merge_data(gdp_growth_df,inflation_df,unemployment)
 df = pd.merge(df, income_per_capita_df, on=['country', 'Years'], how='outer')
-
+df['Years'] = df['Years'].astype(int)
+df['value'] = pd.to_numeric(df['value'], errors='coerce')
 
 
 df=df.rename(columns={
@@ -110,7 +112,7 @@ df["Regime"]           = df.apply(f.get_regime, axis=1)
 
 
 
-
 if __name__ == '__main__':
-    print(df.info())
-    # print(df.head(2))
+    # print(df.info())
+
+    print(df['Income_Per_Capita'].describe())

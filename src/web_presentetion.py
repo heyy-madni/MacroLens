@@ -16,10 +16,9 @@ def main(df):
         func_choice = st.text_input("Enter your choice: ")
 
         if func_choice == "1":
-            f.choice_1(df)
+            f.web_choice_1(df)
 
 main(df)
 
 # st.dataframe(df)
 
-#streamlit run c:/Users/abidb/python/steamlit/test.py

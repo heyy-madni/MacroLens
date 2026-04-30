@@ -1,5 +1,5 @@
 # functions.py
-
+import streamlit as st
 import os
 from report_genrator import over_view_of_economy_chart, generate_report
 
@@ -23,14 +23,37 @@ def clear_console():
 ####################### data functions ########################
 
 def get_condition(row):
+    Income_Per_Capita={
+"mean":    10923.886353,
+"std"  :   16875.429507,
+"min"   :     22.952133,
+"25%"    :  1158.852988,
+"50%"    :  3632.272540,
+"75%"     :  12416.134318,
+"max"    :  137781.681659}
     if row["gdp growth"] < -2:
         return "Recession Signal"
-    elif row["Inflation"] > 8 and row["gdp growth"] < 2:
+    
+
+
+    elif row["gdp growth"] < 0 and row["Inflation"] > 5 and row["Unemployment"] > 7:
+        return "Recession Signal"
+    
+    elif row["Inflation"] > 8 and row["gdp growth"] < 2 and row["Unemployment"] > 5:
         return "Stagflation Risk"
-    elif row["gdp growth"] > 3 and row["Unemployment"] < 5:
+    
+    elif row['Income per Capita'] < Income_Per_Capita["25%"]:#
+        return "Low Income Alert"
+    
+    elif row['Income per Capita'] > Income_Per_Capita["mean"]:
+        return "High Income Alert"
+
+    elif row["gdp growth"] > 3 and row["Unemployment"] < 5 and row["Inflation"] < 5:
         return "Healthy Growth"
+    
     elif row["Inflation"] > 8:
         return "Inflation Risk"
+    
     else:
         return "Stable"
 
@@ -64,7 +87,11 @@ def detect_contradiction(row):
     if row["gdp growth"] > 3 and row["Unemployment"] > 0:
         return "Jobless Growth"
     elif row["gdp growth"] < 0 and row["Unemployment"] < 0:
-        return "Data Contradiction / Lag Effect"
+        return "Data Contradiction "
+    
+    elif row["Inflation"] > 8 and row["gdp growth"] > 3:
+        return "Growth with High Inflation"
+
     else:
         return "No Contradiction"
 
@@ -77,11 +104,27 @@ def get_regime(row):
         return "Transition"
 
 def economic_score(row):
+
+    gdp        = row.get("gdp_growth", 0)        
+    unemp      = row.get("unemployment", 6)      
+    inflation  = row.get("inflation", 2)         
+    income     = row.get("income_per_capita", 0) 
+
+    # Raw score
     score = 0
-    score += row["gdp growth"] * 3
-    score -= row["Unemployment"] * 4
-    score -= max(0, row["Inflation"] - 4) * 1
-    return score
+    score += gdp * 4                          
+    score -= unemp * 3                     
+    score -= max(0, inflation - 2) * 2   
+    score += (income / 12416.134318) * 3        
+
+    # Normalize to 0–100
+
+    MIN_SCORE = -40
+    MAX_SCORE = 60
+    normalized = (score - MIN_SCORE) / (MAX_SCORE - MIN_SCORE) * 100
+    normalized = max(0, min(100, normalized))  # Clip to [0, 100]
+
+    return round(normalized, 2)
 
 def compare_countries(df, country1=None, country2=None, country3=None, year: int = 2020):
     countries = df["country"].unique()
@@ -255,13 +298,16 @@ def choice_5(df):
         print("1. GDP Growth: Annual % growth rate of GDP at constant local currency prices.")
         print("2. Inflation: Annual % change in consumer price index.")
         print("3. Unemployment: % of labor force unemployed but actively seeking work.")
+        print("4. Income per Capita: Gross national income per capita in current US dollars.")
     else:
         print("Invalid choice. Returning to menu.")
 
 
+############################### web functions ########################
 
-
-
+def web_choice_1(df):
+    country = normalize_country(st.text_input("Enter the country for overview (default: India): ") or "India"   )
+    over_view_of_economy_chart(df=df, choice=country)
 
 
 
