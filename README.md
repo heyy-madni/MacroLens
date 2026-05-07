@@ -69,10 +69,10 @@ All datasets are sourced from the [World Bank Open Data](https://data.worldbank.
 
 | # | Indicator | Source |
 |---|---|---|
-| 1 | *(GDP growth)* | World Bank |
-| 2 | *(inflation)* | World Bank |
-| 3 | *(Unemployment)* | World Bank |
-| 4 | *(income per capita)* | World Bank |
+| 1 | *GDP growth* | World Bank |
+| 2 | *inflation* | World Bank |
+| 3 | *Unemployment* | World Bank |
+| 4 | *income per capita* | World Bank |
 
 ---
 
