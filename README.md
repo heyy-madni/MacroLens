@@ -125,12 +125,14 @@ python menu_manager.py
 ## main.py — Streamlit Auto-Launch
 
 ```python
+from data_pipeline import SCR_DIR
 import subprocess
 import sys
-from pathlib import Path
+
+
 
 if __name__ == "__main__":
-    file = Path(__file__).parent / "web_presentation.py"
+    file =SCR_DIR / "web_presentetion.py"
     subprocess.run([sys.executable, "-m", "streamlit", "run", str(file)])
 ```
 
