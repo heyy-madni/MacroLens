@@ -113,6 +113,6 @@ df["Regime"]           = df.apply(f.get_regime, axis=1)
 
 
 if __name__ == '__main__':
-    # print(df.info())
+    print(df.info())
 
-    print(df['Income_Per_Capita'].describe())
+    # print(df['Income_Per_Capita'].describe())

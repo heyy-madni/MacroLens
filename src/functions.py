@@ -42,10 +42,10 @@ def get_condition(row):
     elif row["Inflation"] > 8 and row["gdp growth"] < 2 and row["Unemployment"] > 5:
         return "Stagflation Risk"
     
-    elif row['Income per Capita'] < Income_Per_Capita["25%"]:#
+    elif row['Income_Per_Capita'] < Income_Per_Capita["25%"]:#
         return "Low Income Alert"
     
-    elif row['Income per Capita'] > Income_Per_Capita["mean"]:
+    elif row['Income_Per_Capita'] > Income_Per_Capita["mean"]:
         return "High Income Alert"
 
     elif row["gdp growth"] > 3 and row["Unemployment"] < 5 and row["Inflation"] < 5:
@@ -298,7 +298,7 @@ def choice_5(df):
         print("1. GDP Growth: Annual % growth rate of GDP at constant local currency prices.")
         print("2. Inflation: Annual % change in consumer price index.")
         print("3. Unemployment: % of labor force unemployed but actively seeking work.")
-        print("4. Income per Capita: Gross national income per capita in current US dollars.")
+        print("4. Income_Per_Capita: Gross national Income_Per_Capita in current US dollars.")
     else:
         print("Invalid choice. Returning to menu.")
 
