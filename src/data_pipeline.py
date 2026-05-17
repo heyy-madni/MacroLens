@@ -1,4 +1,4 @@
-#data_pipeline.py
+ #data_pipeline.py
 
 
 #imports
@@ -110,9 +110,10 @@ df["Condition_checker"] = df.apply(f.check_get_condition, axis=1)
 df["Regime"]           = df.apply(f.get_regime, axis=1)
 
 
-
+# file = str(SAVE_REPORT_DIR) + 'report.csv'
+# df.to_csv(file, index=False)
 
 if __name__ == '__main__':
-    print(df.info())
+    print(df.head())
 
     # print(df['Income_Per_Capita'].describe())
