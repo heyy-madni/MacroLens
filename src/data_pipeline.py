@@ -1,4 +1,4 @@
-#data_pipeline.py
+ #data_pipeline.py
 
 
 #imports
@@ -138,8 +138,9 @@ df["Regime"] = df.apply(lambda row: f.get_regime(row, df), axis=1)
 
 
 
-
+# file = str(SAVE_REPORT_DIR) + 'report.csv'
+# df.to_csv(file, index=False)
 
 if __name__ == '__main__':
-    print(df.info())
+    print(df.head())
 
