@@ -1,8 +1,5 @@
 # menu_manager.py
 
-
-from secrets import choice
-
 import functions as f
 
 def main(df):
@@ -26,7 +23,8 @@ def main(df):
             f.choice_2(df, country=country)
 
         elif func_choice == "3":
-            year = input("Enter the year to rank economies (e.g., 2005): ")
+            
+            year = input("Enter the year to rank economies (e.g., 2005): ") or 2005
             f.rank_economies(df, year=int(year))
             input("\nPress Enter to return to the menu...")
 
@@ -47,6 +45,15 @@ def main(df):
             input("Press Enter to return to the menu...")
 
 
+
+if __name__ == "__main__":  
+    from data_pipeline import df
+    while True:
+        try:
+            main(df) 
+        except Exception as e:
+            print(f"An error occurred: {e}")
+            input("Press Enter to return to the menu...")
 
 
 

@@ -43,11 +43,6 @@ def over_view_of_economy_chart(df, choice="India"):
     ax.spines['right'].set_visible(False)
 
 
-
-
-
-
-
       # plot lines
     ax.plot(country['Year'], country['gdp growth'], color="#1cd40b", linewidth=2,
             marker='o', markersize=3, label='GDP Growth (%)', zorder=3)
@@ -73,8 +68,8 @@ def generate_report(df, country="India"):
     filtered = df[df['country'] == country]
     
     from functions import get_condition, detect_contradiction
-    filtered["Condition"] = filtered.apply(get_condition, axis=1)
-    filtered["Contradiction"] = filtered.apply(detect_contradiction, axis=1)
+    filtered["Condition"]     = filtered.apply(lambda row: get_condition(row, df), axis=1)
+    filtered["Contradiction"] = filtered.apply(lambda row: detect_contradiction(row, df), axis=1)
     if filtered.empty:
         print(f"No data found for: {country}")
         return
@@ -306,6 +301,6 @@ def generate_report_HTML(df, country="India", output_path="economic_report.html"
 if __name__ == "__main__":
     from data_pipeline import df
 
-    
-    over_view_of_economy_chart(df,choice="United States")
+    generate_report(df)
+    # over_view_of_economy_chart(df,choice="United States")
 

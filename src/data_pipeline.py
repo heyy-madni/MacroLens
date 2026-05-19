@@ -5,8 +5,9 @@
 import pandas as pd
 from pathlib import Path
 import functions as f
+import country_converter as cc 
 
-#dicetry
+#dir
 BASE_DIR = Path(__file__).resolve().parent.parent
 SCR_DIR = BASE_DIR / "src"
 SAVE_REPORT_DIR = BASE_DIR / "reports"
@@ -99,15 +100,42 @@ df=df.rename(columns={
 df = df.dropna(subset=["gdp growth", "Inflation", "Unemployment", "Income_Per_Capita"])
 df = df.reset_index(drop=True)
 
+non_countries = [
+    "World", "South Asia", "North America", "Sub-Saharan Africa",
+    "Middle income", "Upper middle income", "Lower middle income",
+    "High income", "Low income", "OECD members",
+    "Small states", "Other small states", "Pacific island small states",
+    "Post-demographic dividend", "Pre-demographic dividend",
+    "Middle East & North Africa", "East Asia & Pacific",
+    "Europe & Central Asia", "Latin America & Caribbean","Fragile and conflict affected situations",
+    "Euro area","Heavily indebted poor countries","Least developed countries: UN classification","Heavily indebted poor countries (HIPC)"
+]
+non_country_keywords = [
+    "World", "income", "Asia", "Africa", "Europe", "America",
+    "Caribbean", "Pacific", "OECD", "IDA", "IBRD", "Arab",
+    "demographic", "states", "dividend", "fragile", "blend",
+    "Central", "Eastern", "Western", "Southern", "Northern",
+    "region", "Region"
+]
 
+pattern = "|".join(non_country_keywords)
+
+df = df[~df["country"].str.contains(pattern, na=False)]
+df = df[~df["country"].isin(non_countries)]
+
+
+
+df["Region"] = cc.convert(df["country"], to="UNregion")
 df["Unemployment_Change"] = df.groupby("country")["Unemployment"].diff().round(2)
-df["Condition"]         = df.apply(f.get_condition, axis=1)
-df["Contradiction"]     = df.apply(f.detect_contradiction, axis=1)
+df["Condition"] = df.apply(lambda row: f.get_condition(row, df), axis=1)
+df["Contradiction"] = df.apply(lambda row: f.detect_contradiction(row, df), axis=1)
+df["Economic_Score"] = df.apply(lambda row: f.economic_score(row, df), axis=1).round(2)
 df["Insight"]           = df.apply(f.generate_insight, axis=1)
-df["Economic_Score"]    = df.apply(f.economic_score, axis=1).round(2)
 df["GDP_Predicted"]     = df.groupby("country")["gdp growth"].transform(lambda x: x.rolling(3).mean())
-df["Condition_checker"] = df.apply(f.check_get_condition, axis=1)
-df["Regime"]           = df.apply(f.get_regime, axis=1)
+df["Condition_checker"] = df.apply(lambda row: f.check_get_condition(row, df), axis=1)
+df["Regime"] = df.apply(lambda row: f.get_regime(row, df), axis=1)
+
+
 
 
 
@@ -115,4 +143,3 @@ df["Regime"]           = df.apply(f.get_regime, axis=1)
 if __name__ == '__main__':
     print(df.info())
 
-    # print(df['Income_Per_Capita'].describe())

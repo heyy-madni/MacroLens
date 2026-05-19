@@ -1,24 +1,34 @@
 import streamlit as st
-import functions as f
-from data_pipeline import df
-def main(df):
-    # while True:
-    #     f.clear_console()
-        st.markdown("Main Menu")
-        st.markdown("1. Overview of Economy")
-        st.markdown("2. Generate Report")
-        st.markdown("3. Rank Economies by Year")
-        st.markdown("4. Back Testing")
-        st.markdown("5. Compare Countries")
-        st.markdown("6. Check Modules")
-        st.markdown("7. Exit")
+import pandas as pd
+from data_pipeline import df 
+from functions import compare_countries, regime_periods, rank_economies
 
-        func_choice = st.text_input("Enter your choice: ")
+# Page config
+st.set_page_config(page_title="MacroLens", layout="wide")
 
-        if func_choice == "1":
-            f.web_choice_1(df)
+# Load data
+@st.cache_data
+def load_data():
+    return df
+  
 
-main(df)
+df = load_data()
+
+# Sidebar navigation
+section = st.sidebar.radio("Navigate", ["Country View", "Regional View", "World View"])
+
+if section == "Country View":
+    b=st.button('Rank economis')
+    if b  :
+        st.write(rank_economies(df))
+
+elif section == "Regional View":
+    pass
+
+elif section == "World View":
+    pass
+
+
 
 # st.dataframe(df)
 
